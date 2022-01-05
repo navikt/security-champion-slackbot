@@ -11,6 +11,10 @@ function required(key, defaultValue = undefined) {
   return value;
 }
 
+function asBool(value) {
+  return value === true || value === "true";
+}
+
 module.exports = {
   TEAMKATALOG_API_URL: required(
     "TEAMKATALOG_API_URL",
@@ -19,4 +23,5 @@ module.exports = {
   TEAMKATALOG_MRH_SESSION: optional("TEAMKATALOG_MRH_SESSION", ""),
   SLACK_SIGNING_SECRET: required("SLACK_SIGNING_SECRET"),
   SLACK_BOT_TOKEN: required("SLACK_BOT_TOKEN"),
+  DRY_RUN: asBool(optional("DRY_RUN", false)),
 };
