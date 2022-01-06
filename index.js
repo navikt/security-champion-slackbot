@@ -59,6 +59,21 @@ async function lookupDiffUsersInSlack(diff) {
   };
 }
 
+function userSlackBlock(slackUser, markdownMessage) {
+  return {
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text: markdownMessage,
+    },
+    accessory: {
+      type: "image",
+      image_url: slackUser.profile.image_192,
+      alt_text: slackUser.profile.real_name,
+    },
+  };
+}
+
 (async () => {
   const members = await teamkatalog.getMembersWithRole("SECURITY_CHAMPION");
   console.log(`Found ${members.length} security champions`);
@@ -69,35 +84,18 @@ async function lookupDiffUsersInSlack(diff) {
     `${diffWithSlack.added.length} added, ${diffWithSlack.removed.length} removed, ${diffWithSlack.unchanged.length} unchanged`
   );
 
-  const addedBlocks = diffWithSlack.added.map((user) => {
-    return {
-      type: "section",
-      text: {
-        type: "mrkdwn",
-        text: `:tada: Ny Security Champion i *<${user.group.links.ui} | ${user.group.name}>*\n:security-champion: <@${user.slackUser.id}>`,
-      },
-      accessory: {
-        type: "image",
-        image_url: user.slackUser.profile.image_192,
-        alt_text: user.resource.fullName,
-      },
-    };
-  });
-
-  const removedBlocks = diffWithSlack.removed.map((user) => {
-    return {
-      type: "section",
-      text: {
-        type: "mrkdwn",
-        text: `:sadpanda: Security Champion fjernet fra *<${user.group.links.ui} | ${user.group.name}>*\n<@${user.slackUser.id}>`,
-      },
-      accessory: {
-        type: "image",
-        image_url: user.slackUser.profile.image_192,
-        alt_text: user.resource.fullName,
-      },
-    };
-  });
+  const addedBlocks = diffWithSlack.added.map((user) =>
+    userSlackBlock(
+      user.slackUser,
+      `:tada: Ny Security Champion i *<${user.group.links.ui} | ${user.group.name}>*\n:security-champion: <@${user.slackUser.id}>`
+    )
+  );
+  const removedBlocks = diffWithSlack.removed.map((user) =>
+    userSlackBlock(
+      user.slackUser,
+      `:sadpanda: Security Champion fjernet fra *<${user.group.links.ui} | ${user.group.name}>*\n<@${user.slackUser.id}>`
+    )
+  );
 
   if (addedBlocks.length || removedBlocks.length) {
     await slack.sendMessageBlocks(config.SECURITY_CHAMPION_CHANNEL, [
