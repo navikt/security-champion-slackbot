@@ -73,7 +73,7 @@ async function broadcastDiff(diffWithSlack) {
   const addedBlocks = added.map((user) =>
     userSlackBlock(
       user.slackUser,
-      `:tada: Ny Security Champion i *<${user.group.links.ui} | ${user.group.name}>*\n:security-champion: <@${user.slackUser.id}>`
+      `:tada: *<${user.group.links.ui} | ${user.group.name}>* har fått seg en ny Security Champion!\n:security-champion: ${user.slackUser.profile.real_name} (<@${user.slackUser.id}>)\n\nVelkommen! :meow_wave: :security-pepperkake:`
     )
   );
   const removedBlocks = removed.map((user) =>
@@ -108,6 +108,10 @@ async function broadcastDiff(diffWithSlack) {
       ...removedBlocks,
       ...addedBlocks,
     ],
+  });
+  await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
+    text: simpleMessageParts.join("\n"),
+    blocks: [...addedBlocks],
   });
 }
 
