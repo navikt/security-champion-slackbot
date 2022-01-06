@@ -1,8 +1,8 @@
 const fs = require("fs");
-const teamkatalog = require("./lib/teamkatalog");
-const slack = require("./lib/slack");
-const config = require("./config");
-const { writeFileAsJson, readFileAsJson, diffLists } = require("./lib/util");
+const teamkatalog = require("../lib/teamkatalog");
+const slack = require("../lib/slack");
+const config = require("../config");
+const { writeFileAsJson, readFileAsJson, diffLists } = require("../lib/util");
 
 const snapshotFile = "tmp/security-champions.snapshot.json";
 const slackUsersCache = "tmp/users.json";
@@ -125,7 +125,7 @@ async function broadcastDiff(diffWithSlack) {
   });
 }
 
-(async () => {
+module.exports = async function cmdSync() {
   const members = await teamkatalog.getMembersWithRole("SECURITY_CHAMPION");
   if (!members.length) {
     console.error("Could not find any security champions");
@@ -138,4 +138,4 @@ async function broadcastDiff(diffWithSlack) {
   const diffWithSlack = await lookupDiffUsersInSlack(diff);
 
   await broadcastDiff(diffWithSlack);
-})();
+};
