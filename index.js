@@ -75,8 +75,14 @@ function userSlackBlock(slackUser, markdownMessage) {
 }
 
 async function broadcastDiff(diffWithSlack) {
-  const { added, removed } = diffWithSlack;
-  if (added.length === 0 || removed.length === 0) return;
+  const { added, removed, unchanged } = diffWithSlack;
+  if (added.length === 0 || removed.length === 0) {
+    console.log(`No changes detected (${unchanged.length} unchanged)`);
+    return;
+  }
+  console.log(
+    `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`
+  );
 
   const addedBlocks = added.map((user) =>
     userSlackBlock(
@@ -108,9 +114,6 @@ async function broadcastDiff(diffWithSlack) {
 
   const diff = getMemberDiff(members);
   const diffWithSlack = await lookupDiffUsersInSlack(diff);
-  console.log(
-    `${diffWithSlack.added.length} added, ${diffWithSlack.removed.length} removed, ${diffWithSlack.unchanged.length} unchanged`
-  );
 
   await broadcastDiff(diffWithSlack);
 })();
