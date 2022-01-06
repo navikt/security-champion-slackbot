@@ -51,10 +51,31 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: .nais/dev-gcp.yaml
 
+  deploy-prod:
+    name: Deploy til prod
+    needs: test-build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        name: Checkout
+
+      - name: Lag tag for image
+        run: echo "TAG=$(git log -1 --pretty='%ad_%h' --date=format:'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
+      - name: Lag full image referanse
+        run: echo "IMAGE=$IMAGE_BASE:$TAG" >> $GITHUB_ENV
+
+      - name: Deploy
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/prod-gcp.yaml
+
   release:
     if: github.ref == 'refs/heads/main'
     name: Tag and release
-    needs: deploy-dev
+    needs: deploy-prod
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
