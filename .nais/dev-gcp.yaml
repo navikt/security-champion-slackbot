@@ -1,0 +1,28 @@
+apiVersion: nais.io/v1
+kind: Naisjob
+metadata:
+  labels:
+    team: security-champion-admin
+  name: security-champion-slackbot
+  namespace: security-champion-admin
+spec:
+  image: {{image}}
+  schedule: "0 12 * * *"
+  gcp:
+    buckets:
+      - name: security-champion-slackbot-dev
+        lifecycleCondition:
+          age: 7
+          numNewerVersions: 2
+          withState: ANY
+  env:
+    - name: SLACK_SIGNING_SECRET
+      value: dummyvalue
+    - name: SLACK_BOT_TOKEN
+      value: dummyvalue
+    - name: SECURITY_CHAMPION_CHANNEL
+      value: dummyvalue
+    - name: SECURITY_CHAMPION_SLACK_USERGROUP
+      value: dummyvalue
+    - name: GSC_BUCKET_NAME
+      value: security-champion-slackbot-dev
