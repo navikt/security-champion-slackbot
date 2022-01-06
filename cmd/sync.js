@@ -66,10 +66,6 @@ function userSlackBlock(slackUser, markdownMessage) {
 
 async function broadcastDiff(diffWithSlack) {
   const { added, removed, unchanged } = diffWithSlack;
-  if (added.length === 0 && removed.length === 0) {
-    console.log(`No changes detected (${unchanged.length} unchanged)`);
-    return;
-  }
   console.log(
     `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`
   );
@@ -125,7 +121,11 @@ module.exports = async function cmdSync() {
   console.log(`Found ${members.length} security champions`);
 
   const diff = await getMemberDiff(members);
-  const diffWithSlack = await lookupDiffUsersInSlack(diff);
+  if (diff.added.length === 0 && diff.removed.length === 0) {
+    console.log(`No changes detected (${diff.unchanged.length} unchanged)`);
+    return;
+  }
 
+  const diffWithSlack = await lookupDiffUsersInSlack(diff);
   await broadcastDiff(diffWithSlack);
 };
