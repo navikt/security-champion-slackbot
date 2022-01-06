@@ -97,7 +97,24 @@ async function broadcastDiff(diffWithSlack) {
     )
   );
 
+  const simpleMessageParts = ["Oppdatering av Security Champions"];
+  if (added.length) {
+    const addedMessages = added.map(
+      (user) =>
+        `- <@${user.slackUser.id}> (<${user.group.links.ui} | ${user.group.name}>)`
+    );
+    simpleMessageParts.push("*Lagt til:*", ...addedMessages);
+  }
+  if (removed.length) {
+    const removedMessages = removed.map(
+      (user) =>
+        `- <@${user.slackUser.id}> (<${user.group.links.ui} | ${user.group.name}>)`
+    );
+    simpleMessageParts.push("*Fjernet:*", ...removedMessages);
+  }
+
   await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
+    text: simpleMessageParts.join("\n"),
     blocks: [
       {
         type: "divider",
