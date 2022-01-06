@@ -8,4 +8,4 @@ COPY . /usr/src/app
 
 USER node
 
-CMD ["npm", "run", "test-storage"]
+CMD ["npm", "run", "sync"]
