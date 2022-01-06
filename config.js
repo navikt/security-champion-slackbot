@@ -27,5 +27,6 @@ module.exports = {
   SECURITY_CHAMPION_SLACK_USERGROUP: required(
     "SECURITY_CHAMPION_SLACK_USERGROUP"
   ),
+  GSC_BUCKET_NAME: optional("GSC_BUCKET_NAME"),
   DRY_RUN: asBool(optional("DRY_RUN", false)),
 };

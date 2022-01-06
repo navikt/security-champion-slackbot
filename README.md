@@ -12,4 +12,5 @@ For oppfølging av Security Champions
 | SLACK_SIGNING_SECRET              | Ja           |                                        | Slack signing secret                                        |
 | SECURITY_CHAMPION_CHANNEL         | Ja           |                                        | ID til slack-kanal for varsler                              |
 | SECURITY_CHAMPION_SLACK_USERGROUP | Ja           |                                        | ID til slack-brukergruppe (f.eks. @security-champions)      |
+| GSC_BUCKET_NAME                   | Nei          |                                        | Navn på google-bucket for ekstern cache                     |
 | DRY_RUN                           | Nei          | `false`                                | Dry-run-modus deaktiverer endringer                         |
