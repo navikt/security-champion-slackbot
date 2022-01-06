@@ -7,7 +7,7 @@ metadata:
   namespace: security-champion-admin
 spec:
   image: {{image}}
-  schedule: "30 * * * *"
+  schedule: "55 8 * * *"
   gcp:
     buckets:
       - name: security-champion-slackbot-prod
