@@ -127,6 +127,11 @@ async function broadcastDiff(diffWithSlack) {
 
 (async () => {
   const members = await teamkatalog.getMembersWithRole("SECURITY_CHAMPION");
+  if (!members.length) {
+    console.error("Could not find any security champions");
+    process.exit(1);
+  }
+
   console.log(`Found ${members.length} security champions`);
 
   const diff = getMemberDiff(members);
