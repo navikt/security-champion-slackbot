@@ -66,7 +66,7 @@ function userSlackBlock(slackUser, markdownMessage) {
 
 async function broadcastDiff(diffWithSlack) {
   const { added, removed, unchanged } = diffWithSlack;
-  if (added.length === 0 || removed.length === 0) {
+  if (added.length === 0 && removed.length === 0) {
     console.log(`No changes detected (${unchanged.length} unchanged)`);
     return;
   }
