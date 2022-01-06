@@ -70,6 +70,18 @@ async function broadcastDiff(diffWithSlack) {
     `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`
   );
 
+  if (added.length) {
+    try {
+      const addedSlackUserIds = added.map((user) => user.slackUser.id);
+      await slack.addMembersToGroup(
+        addedSlackUserIds,
+        config.SECURITY_CHAMPION_SLACK_USERGROUP
+      );
+    } catch (e) {
+      console.error("Error updating slack user group", e);
+    }
+  }
+
   const addedBlocks = added.map((user) =>
     userSlackBlock(
       user.slackUser,
