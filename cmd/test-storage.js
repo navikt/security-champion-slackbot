@@ -7,8 +7,12 @@ module.exports = async function cmdTestStorage() {
 
   if (exists) {
     console.log("File already exists in storage");
-    const content = await storage.getFileContent(fileName);
-    console.log("Content in storage: " + content);
+    try {
+      const content = await storage.getFileContent(fileName);
+      console.log("Content in storage: " + content);
+    } catch (e) {
+      console.error("Error getting file content", e);
+    }
   }
   console.log("Uploading file: " + fileName);
   await storage.setFileContents(
