@@ -64,9 +64,10 @@ async function lookupDiffUsersInSlack(diff) {
   console.log(`Found ${members.length} security champions`);
 
   const diff = getMemberDiff(members);
-  console.log(diff);
-
   const diffWithSlack = await lookupDiffUsersInSlack(diff);
+  console.log(
+    `${diffWithSlack.added.length} added, ${diffWithSlack.removed.length} removed, ${diffWithSlack.unchanged.length} unchanged`
+  );
 
   const addedBlocks = diffWithSlack.added.map((user) => {
     return {
