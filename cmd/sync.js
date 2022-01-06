@@ -99,7 +99,7 @@ async function broadcastDiff(diffWithSlack) {
     simpleMessageParts.push("*Fjernet:*", ...removedMessages);
   }
 
-  await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
+  await slack.sendMessage(config.SECURITY_CHAMPION_ADMIN_CHANNEL, {
     text: simpleMessageParts.join("\n"),
     blocks: [
       {
