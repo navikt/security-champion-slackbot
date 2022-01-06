@@ -74,16 +74,7 @@ function userSlackBlock(slackUser, markdownMessage) {
   };
 }
 
-(async () => {
-  const members = await teamkatalog.getMembersWithRole("SECURITY_CHAMPION");
-  console.log(`Found ${members.length} security champions`);
-
-  const diff = getMemberDiff(members);
-  const diffWithSlack = await lookupDiffUsersInSlack(diff);
-  console.log(
-    `${diffWithSlack.added.length} added, ${diffWithSlack.removed.length} removed, ${diffWithSlack.unchanged.length} unchanged`
-  );
-
+async function broadcastDiff(diffWithSlack) {
   const addedBlocks = diffWithSlack.added.map((user) =>
     userSlackBlock(
       user.slackUser,
@@ -108,4 +99,17 @@ function userSlackBlock(slackUser, markdownMessage) {
       ],
     });
   }
+}
+
+(async () => {
+  const members = await teamkatalog.getMembersWithRole("SECURITY_CHAMPION");
+  console.log(`Found ${members.length} security champions`);
+
+  const diff = getMemberDiff(members);
+  const diffWithSlack = await lookupDiffUsersInSlack(diff);
+  console.log(
+    `${diffWithSlack.added.length} added, ${diffWithSlack.removed.length} removed, ${diffWithSlack.unchanged.length} unchanged`
+  );
+
+  await broadcastDiff(diffWithSlack);
 })();
