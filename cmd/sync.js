@@ -1,33 +1,23 @@
-const fs = require("fs");
 const teamkatalog = require("../lib/teamkatalog");
 const slack = require("../lib/slack");
 const config = require("../config");
-const { writeFileAsJson, readFileAsJson, diffLists } = require("../lib/util");
+const { diffLists } = require("../lib/util");
+const storage = require("../lib/storage");
 
-const snapshotFile = "tmp/security-champions.snapshot.json";
-const slackUsersCache = "tmp/users.json";
+const snapshotFile = "security-champions.json";
 
-function getMemberDiff(currentSnapshot) {
-  const previousSnapshot = fs.existsSync(snapshotFile)
-    ? readFileAsJson(snapshotFile)
+async function getMemberDiff(currentSnapshot) {
+  const previousSnapshot = (await storage.fileExists(snapshotFile))
+    ? JSON.parse((await storage.getFileContent(snapshotFile)).toString("utf8"))
     : currentSnapshot;
   const identityMapper = (item) => item.group.id + "/" + item.navIdent;
   const diff = diffLists(previousSnapshot, currentSnapshot, identityMapper);
+
   if (!config.DRY_RUN) {
-    writeFileAsJson(snapshotFile, currentSnapshot);
+    const json = JSON.stringify(currentSnapshot, undefined, 2);
+    await storage.setFileContents(snapshotFile, json);
   }
   return diff;
-}
-
-async function loadSlackUsers() {
-  if (fs.existsSync(slackUsersCache)) {
-    return readFileAsJson(slackUsersCache);
-  }
-  const slackUsers = await slack.getAllUsers();
-  if (!config.DRY_RUN) {
-    writeFileAsJson(slackUsersCache, slackUsers);
-  }
-  return slackUsers;
 }
 
 function createLookupMap(list, lookupMapper) {
@@ -37,7 +27,7 @@ function createLookupMap(list, lookupMapper) {
 }
 
 async function lookupDiffUsersInSlack(diff) {
-  const slackUsers = await loadSlackUsers();
+  const slackUsers = await slack.getAllUsers();
   const slackByName = createLookupMap(slackUsers, (user) =>
     user.name?.toLowerCase()
   );
@@ -134,7 +124,7 @@ module.exports = async function cmdSync() {
 
   console.log(`Found ${members.length} security champions`);
 
-  const diff = getMemberDiff(members);
+  const diff = await getMemberDiff(members);
   const diffWithSlack = await lookupDiffUsersInSlack(diff);
 
   await broadcastDiff(diffWithSlack);
