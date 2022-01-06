@@ -2,7 +2,7 @@ const storage = require("../lib/storage");
 
 module.exports = async function cmdTestStorage() {
   console.log("Testing storage");
-  const fileName = "slack-users.json";
+  const fileName = "test-file.json";
   const exists = await storage.fileExists(fileName);
 
   if (exists) {
