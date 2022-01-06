@@ -98,12 +98,14 @@ function userSlackBlock(slackUser, markdownMessage) {
   );
 
   if (addedBlocks.length || removedBlocks.length) {
-    await slack.sendMessageBlocks(config.SECURITY_CHAMPION_CHANNEL, [
-      {
-        type: "divider",
-      },
-      ...removedBlocks,
-      ...addedBlocks,
-    ]);
+    await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
+      blocks: [
+        {
+          type: "divider",
+        },
+        ...removedBlocks,
+        ...addedBlocks,
+      ],
+    });
   }
 })();
