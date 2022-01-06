@@ -75,30 +75,31 @@ function userSlackBlock(slackUser, markdownMessage) {
 }
 
 async function broadcastDiff(diffWithSlack) {
-  const addedBlocks = diffWithSlack.added.map((user) =>
+  const { added, removed } = diffWithSlack;
+  if (added.length === 0 || removed.length === 0) return;
+
+  const addedBlocks = added.map((user) =>
     userSlackBlock(
       user.slackUser,
       `:tada: Ny Security Champion i *<${user.group.links.ui} | ${user.group.name}>*\n:security-champion: <@${user.slackUser.id}>`
     )
   );
-  const removedBlocks = diffWithSlack.removed.map((user) =>
+  const removedBlocks = removed.map((user) =>
     userSlackBlock(
       user.slackUser,
       `:sadpanda: Security Champion fjernet fra *<${user.group.links.ui} | ${user.group.name}>*\n<@${user.slackUser.id}>`
     )
   );
 
-  if (addedBlocks.length || removedBlocks.length) {
-    await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
-      blocks: [
-        {
-          type: "divider",
-        },
-        ...removedBlocks,
-        ...addedBlocks,
-      ],
-    });
-  }
+  await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
+    blocks: [
+      {
+        type: "divider",
+      },
+      ...removedBlocks,
+      ...addedBlocks,
+    ],
+  });
 }
 
 (async () => {
