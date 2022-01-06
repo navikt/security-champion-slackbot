@@ -15,14 +15,8 @@ spec:
           age: 7
           numNewerVersions: 2
           withState: ANY
+  envFrom:
+    - secret: security-champion-slackbot-config
   env:
-    - name: SLACK_SIGNING_SECRET
-      value: dummyvalue
-    - name: SLACK_BOT_TOKEN
-      value: dummyvalue
-    - name: SECURITY_CHAMPION_CHANNEL
-      value: dummyvalue
-    - name: SECURITY_CHAMPION_SLACK_USERGROUP
-      value: dummyvalue
     - name: GSC_BUCKET_NAME
       value: security-champion-slackbot-dev
