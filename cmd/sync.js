@@ -82,11 +82,11 @@ async function handleAddedChampions(added) {
     console.error("Error updating slack user group", e);
   }
 
-  const simpleAddedMessageParts = [
+  const simpleMessageParts = [
     "Nye Security Champions:",
     ...formatSimpleUserList(added),
   ];
-  const addedBlocks = added.map((user) =>
+  const messageBlocks = added.map((user) =>
     userSlackBlock(
       user.slackUser,
       `:tada: *<${user.group.links.ui} | ${user.group.name}>* har fått seg en ny Security Champion!\n:security-champion: ${user.slackUser.profile.real_name} (<@${user.slackUser.id}>)\n\nVelkommen! :meow_wave: :security-pepperkake:`
@@ -94,17 +94,17 @@ async function handleAddedChampions(added) {
   );
 
   await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
-    text: simpleAddedMessageParts.join("\n"),
-    blocks: [...addedBlocks],
+    text: simpleMessageParts.join("\n"),
+    blocks: [...messageBlocks],
   });
 }
 
 async function handleRemovedChampons(removed) {
-  const simpleRemovedMessageParts = [
+  const simpleMessageParts = [
     "Fjernede Security Champions:",
     ...formatSimpleUserList(removed),
   ];
-  const removedBlocks = removed.map((user) =>
+  const messageBlocks = removed.map((user) =>
     userSlackBlock(
       user.slackUser,
       `:sadpanda: Security Champion fjernet fra *<${user.group.links.ui} | ${user.group.name}>*\n<@${user.slackUser.id}>`
@@ -112,8 +112,8 @@ async function handleRemovedChampons(removed) {
   );
 
   await slack.sendMessage(config.SECURITY_CHAMPION_ADMIN_CHANNEL, {
-    text: simpleRemovedMessageParts.join("\n"),
-    blocks: [...removedBlocks],
+    text: simpleMessageParts.join("\n"),
+    blocks: [...messageBlocks],
   });
 }
 
