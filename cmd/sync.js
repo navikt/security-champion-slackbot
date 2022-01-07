@@ -64,6 +64,13 @@ function userSlackBlock(slackUser, markdownMessage) {
   };
 }
 
+function formatSimpleUserList(userList) {
+  return userList.map(
+    (user) =>
+      `- <@${user.slackUser.id}> (<${user.group.links.ui} | ${user.group.name}>)`
+  );
+}
+
 async function broadcastDiff(diffWithSlack) {
   const { added, removed, unchanged } = diffWithSlack;
   console.log(
@@ -82,12 +89,21 @@ async function broadcastDiff(diffWithSlack) {
     }
   }
 
+  const simpleAddedMessageParts = [
+    "Nye Security Champions:",
+    ...formatSimpleUserList(added),
+  ];
   const addedBlocks = added.map((user) =>
     userSlackBlock(
       user.slackUser,
       `:tada: *<${user.group.links.ui} | ${user.group.name}>* har fått seg en ny Security Champion!\n:security-champion: ${user.slackUser.profile.real_name} (<@${user.slackUser.id}>)\n\nVelkommen! :meow_wave: :security-pepperkake:`
     )
   );
+
+  const simpleRemovedMessageParts = [
+    "Fjernede Security Champions:",
+    ...formatSimpleUserList(removed),
+  ];
   const removedBlocks = removed.map((user) =>
     userSlackBlock(
       user.slackUser,
@@ -95,34 +111,12 @@ async function broadcastDiff(diffWithSlack) {
     )
   );
 
-  const simpleMessageParts = ["Oppdatering av Security Champions"];
-  if (added.length) {
-    const addedMessages = added.map(
-      (user) =>
-        `- <@${user.slackUser.id}> (<${user.group.links.ui} | ${user.group.name}>)`
-    );
-    simpleMessageParts.push("*Lagt til:*", ...addedMessages);
-  }
-  if (removed.length) {
-    const removedMessages = removed.map(
-      (user) =>
-        `- <@${user.slackUser.id}> (<${user.group.links.ui} | ${user.group.name}>)`
-    );
-    simpleMessageParts.push("*Fjernet:*", ...removedMessages);
-  }
-
   await slack.sendMessage(config.SECURITY_CHAMPION_ADMIN_CHANNEL, {
-    text: simpleMessageParts.join("\n"),
-    blocks: [
-      {
-        type: "divider",
-      },
-      ...removedBlocks,
-      ...addedBlocks,
-    ],
+    text: simpleRemovedMessageParts.join("\n"),
+    blocks: [...removedBlocks],
   });
   await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
-    text: simpleMessageParts.join("\n"),
+    text: simpleAddedMessageParts.join("\n"),
     blocks: [...addedBlocks],
   });
 }
