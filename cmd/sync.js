@@ -117,7 +117,7 @@ async function handleRemovedChampons(removed) {
   });
 }
 
-async function broadcastDiff(diffWithSlack) {
+async function handleDiff(diffWithSlack) {
   const { added, removed, unchanged } = diffWithSlack;
   console.log(
     `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`
@@ -147,5 +147,5 @@ module.exports = async function cmdSync() {
   }
 
   const diffWithSlack = await lookupDiffUsersInSlack(diff);
-  await broadcastDiff(diffWithSlack);
+  await handleDiff(diffWithSlack);
 };
