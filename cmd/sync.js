@@ -71,22 +71,15 @@ function formatSimpleUserList(userList) {
   );
 }
 
-async function broadcastDiff(diffWithSlack) {
-  const { added, removed, unchanged } = diffWithSlack;
-  console.log(
-    `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`
-  );
-
-  if (added.length) {
-    try {
-      const addedSlackUserIds = added.map((user) => user.slackUser.id);
-      await slack.addMembersToGroup(
-        addedSlackUserIds,
-        config.SECURITY_CHAMPION_SLACK_USERGROUP
-      );
-    } catch (e) {
-      console.error("Error updating slack user group", e);
-    }
+async function handleAddedChampions(added) {
+  try {
+    const addedSlackUserIds = added.map((user) => user.slackUser.id);
+    await slack.addMembersToGroup(
+      addedSlackUserIds,
+      config.SECURITY_CHAMPION_SLACK_USERGROUP
+    );
+  } catch (e) {
+    console.error("Error updating slack user group", e);
   }
 
   const simpleAddedMessageParts = [
@@ -100,6 +93,13 @@ async function broadcastDiff(diffWithSlack) {
     )
   );
 
+  await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
+    text: simpleAddedMessageParts.join("\n"),
+    blocks: [...addedBlocks],
+  });
+}
+
+async function handleRemovedChampons(removed) {
   const simpleRemovedMessageParts = [
     "Fjernede Security Champions:",
     ...formatSimpleUserList(removed),
@@ -115,10 +115,20 @@ async function broadcastDiff(diffWithSlack) {
     text: simpleRemovedMessageParts.join("\n"),
     blocks: [...removedBlocks],
   });
-  await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
-    text: simpleAddedMessageParts.join("\n"),
-    blocks: [...addedBlocks],
-  });
+}
+
+async function broadcastDiff(diffWithSlack) {
+  const { added, removed, unchanged } = diffWithSlack;
+  console.log(
+    `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`
+  );
+
+  if (added.length) {
+    await handleAddedChampions(added);
+  }
+  if (removed.length) {
+    await handleRemovedChampons(removed);
+  }
 }
 
 module.exports = async function cmdSync() {
