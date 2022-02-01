@@ -71,17 +71,19 @@ function formatSimpleUserList(userList) {
   );
 }
 
-async function handleAddedChampions(added) {
+async function handleModifiedChampions(all) {
   try {
-    const addedSlackUserIds = added.map((user) => user.slackUser.id);
-    await slack.addMembersToGroup(
-      addedSlackUserIds,
+    const slackUserIds = all.map((user) => user.slackUser.id);
+    await slack.setMembersInGroup(
+      slackUserIds,
       config.SECURITY_CHAMPION_SLACK_USERGROUP
     );
   } catch (e) {
     console.error("Error updating slack user group", e);
   }
+}
 
+async function handleAddedChampions(added) {
   const simpleMessageParts = [
     "Nye Security Champions:",
     ...formatSimpleUserList(added),
@@ -122,6 +124,10 @@ async function handleDiff(diffWithSlack) {
   console.log(
     `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`
   );
+
+  if (added.length || removed.length) {
+    await handleModifiedChampions([...unchanged, ...added]);
+  }
 
   if (added.length) {
     await handleAddedChampions(added);
