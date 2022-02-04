@@ -125,9 +125,7 @@ async function handleDiff(diffWithSlack) {
     `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`
   );
 
-  if (added.length || removed.length) {
-    await handleModifiedChampions([...unchanged, ...added]);
-  }
+  await handleModifiedChampions([...unchanged, ...added]);
 
   if (added.length) {
     await handleAddedChampions(added);
