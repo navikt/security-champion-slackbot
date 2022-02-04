@@ -22,14 +22,15 @@ Slackboten er foreløpig satt opp til å kjøre som en `Naisjob` med et jevnt in
 
 Mesteparten av valgene er konfigurert gjennom GCP Secret Manager, og injisert som environment-variabler ved kjøring.
 
-| Environment-variabel                | Forklaring                                                  | Obligatorisk | Default-verdi                          |
-| ----------------------------------- | ----------------------------------------------------------- | ------------ | -------------------------------------- |
-| `TEAMKATALOG_API_URL`               | URL til teamkatalog-APIet                                   | Ja           | `https://teamkatalog.nais.adeo.no/api` |
-| `TEAMKATALOG_MRH_SESSION`           | MRHSession-cookie for bruk av teamkatalog-APIet utenfor FSS | Nei          |                                        |
-| `SLACK_BOT_TOKEN`                   | Slack bot token                                             | Ja           |                                        |
-| `SLACK_SIGNING_SECRET`              | Slack signing secret                                        | Ja           |                                        |
-| `SECURITY_CHAMPION_CHANNEL`         | ID til slack-kanal for varsler                              | Ja           |                                        |
-| `SECURITY_CHAMPION_ADMIN_CHANNEL`   | ID til slack-kanal for interne varsler                      | Ja           |                                        |
-| `SECURITY_CHAMPION_SLACK_USERGROUP` | ID til slack-brukergruppe (f.eks. @security-champions)      | Ja           |                                        |
-| `GSC_BUCKET_NAME`                   | Navn på google-bucket for ekstern cache                     | Nei          |                                        |
-| `DRY_RUN`                           | Dry-run-modus deaktiverer endringer                         | Nei          | `false`                                |
+| Environment-variabel                | Forklaring                                                                     | Obligatorisk | Default-verdi                          |
+| ----------------------------------- | ------------------------------------------------------------------------------ | ------------ | -------------------------------------- |
+| `TEAMKATALOG_API_URL`               | URL til teamkatalog-APIet                                                      | Ja           | `https://teamkatalog.nais.adeo.no/api` |
+| `TEAMKATALOG_MRH_SESSION`           | MRHSession-cookie for bruk av teamkatalog-APIet utenfor FSS                    | Nei          |                                        |
+| `SLACK_BOT_TOKEN`                   | Slack bot token                                                                | Ja           |                                        |
+| `SLACK_SIGNING_SECRET`              | Slack signing secret                                                           | Ja           |                                        |
+| `SECURITY_CHAMPION_CHANNEL`         | ID til slack-kanal for varsler                                                 | Ja           |                                        |
+| `SECURITY_CHAMPION_ADMIN_CHANNEL`   | ID til slack-kanal for interne varsler                                         | Ja           |                                        |
+| `SECURITY_CHAMPION_SLACK_USERGROUP` | ID til slack-brukergruppe (f.eks. @security-champions)                         | Ja           |                                        |
+| `GSC_BUCKET_NAME`                   | Navn på google-bucket for ekstern cache                                        | Nei          |                                        |
+| `DRY_RUN`                           | Dry-run-modus deaktiverer endringer                                            | Nei          | `false`                                |
+| `FORCE_UPDATE`                      | Tvinger kjøring av oppdatering av Slack-gruppe, selv når det ikke er endringer | Nei          | `false`                                |

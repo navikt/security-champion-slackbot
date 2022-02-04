@@ -145,11 +145,11 @@ module.exports = async function cmdSync() {
   console.log(`Found ${members.length} security champions`);
 
   const diff = await getMemberDiff(members);
-  if (diff.added.length === 0 && diff.removed.length === 0) {
+  const changesDetected = diff.added.length > 0 || diff.removed.length > 0;
+  if (changesDetected || config.FORCE_UPDATE) {
+    const diffWithSlack = await lookupDiffUsersInSlack(diff);
+    await handleDiff(diffWithSlack);
+  } else {
     console.log(`No changes detected (${diff.unchanged.length} unchanged)`);
-    return;
   }
-
-  const diffWithSlack = await lookupDiffUsersInSlack(diff);
-  await handleDiff(diffWithSlack);
 };

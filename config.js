@@ -30,4 +30,5 @@ module.exports = {
   ),
   GSC_BUCKET_NAME: optional("GSC_BUCKET_NAME"),
   DRY_RUN: asBool(optional("DRY_RUN", false)),
+  FORCE_UPDATE: asBool(optional("FORCE_UPDATE", false)),
 };
