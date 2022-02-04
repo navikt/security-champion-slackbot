@@ -49,6 +49,16 @@ async function lookupDiffUsersInSlack(diff) {
   };
 }
 
+function simpleBlock(markdownMessage) {
+  return {
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text: markdownMessage,
+    },
+  };
+}
+
 function userSlackBlock(slackUser, markdownMessage) {
   return {
     type: "section",
@@ -91,13 +101,17 @@ async function handleAddedChampions(added) {
   const messageBlocks = added.map((user) =>
     userSlackBlock(
       user.slackUser,
-      `:tada: *<${user.group.links.ui} | ${user.group.name}>* har fått seg en ny Security Champion!\n:security-champion: ${user.slackUser.profile.real_name} (<@${user.slackUser.id}>)\n\nVelkommen! :meow_wave: :security-pepperkake:`
+      `:tada: *<${user.group.links.ui} | ${user.group.name}>* har fått seg en ny Security Champion!\n:security-champion: ${user.slackUser.profile.real_name} (<@${user.slackUser.id}>)`
     )
+  );
+
+  const outroBlock = simpleBlock(
+    `Velkommen! :meow_wave: :security-pepperkake:\nSjekk <https://sikkerhet.nav.no/docs/ny-security-champion | «Ny Security Champion»> for praktiske oppgaver å starte med :muscle:`
   );
 
   await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
     text: simpleMessageParts.join("\n"),
-    blocks: [...messageBlocks],
+    blocks: [...messageBlocks, outroBlock],
   });
 }
 
