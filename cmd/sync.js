@@ -112,6 +112,7 @@ async function handleAddedChampions(added) {
   await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
     text: simpleMessageParts.join("\n"),
     blocks: [...messageBlocks, outroBlock],
+    unfurl_links: false,
   });
 }
 
