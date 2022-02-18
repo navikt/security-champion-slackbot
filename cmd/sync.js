@@ -116,7 +116,7 @@ async function handleAddedChampions(added) {
   });
 }
 
-async function handleRemovedChampons(removed) {
+async function handleRemovedChampions(removed) {
   const simpleMessageParts = [
     "Fjernede Security Champions:",
     ...formatSimpleUserList(removed),
@@ -146,7 +146,7 @@ async function handleDiff(diffWithSlack) {
     await handleAddedChampions(added);
   }
   if (removed.length) {
-    await handleRemovedChampons(removed);
+    await handleRemovedChampions(removed);
   }
 }
 
