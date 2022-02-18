@@ -10,7 +10,7 @@ async function getMemberDiff(currentSnapshot) {
   const previousSnapshot = (await storage.fileExists(snapshotFile))
     ? JSON.parse((await storage.getFileContent(snapshotFile)).toString("utf8"))
     : currentSnapshot;
-  const identityMapper = (item) => item.group.id + "/" + item.navIdent;
+  const identityMapper = (item) => item.navIdent;
   const diff = diffLists(previousSnapshot, currentSnapshot, identityMapper);
 
   if (!config.DRY_RUN) {
