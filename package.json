@@ -15,14 +15,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/storage": "5.18.1",
+    "@google-cloud/storage": "5.18.2",
     "@slack/bolt": "3.9.0",
     "cross-fetch": "3.1.5",
     "yargs": "17.3.1"
   },
   "devDependencies": {
     "husky": "7.0.4",
-    "lint-staged": "12.3.2",
+    "lint-staged": "12.3.4",
     "prettier": "2.5.1"
   },
   "lint-staged": {
