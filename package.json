@@ -18,7 +18,7 @@
     "@google-cloud/storage": "5.18.2",
     "@slack/bolt": "3.11.3",
     "cross-fetch": "3.1.5",
-    "yargs": "17.4.0"
+    "yargs": "17.5.1"
   },
   "devDependencies": {
     "husky": "8.0.1",
