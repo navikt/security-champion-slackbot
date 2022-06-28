@@ -20,3 +20,5 @@ spec:
   env:
     - name: GSC_BUCKET_NAME
       value: security-champion-slackbot-prod
+    - name: NPM_CONFIG_CACHE
+      value: /tmp
