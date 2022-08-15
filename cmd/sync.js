@@ -27,7 +27,8 @@ function createLookupMap(list, lookupMapper) {
 }
 
 async function lookupDiffUsersInSlack(diff) {
-  const slackUsers = await slack.getAllUsers();
+  const allSlackUsers = await slack.getAllUsers();
+  const slackUsers = allSlackUsers.filter((slackUser) => !slackUser.deleted);
   const slackByName = createLookupMap(slackUsers, (user) =>
     user.name?.toLowerCase()
   );
