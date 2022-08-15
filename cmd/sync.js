@@ -84,7 +84,17 @@ function formatSimpleUserList(userList) {
 
 async function handleModifiedChampions(all) {
   try {
-    const slackUserIds = all.map((user) => user.slackUser.id);
+    const nonExistingUsers = all.filter((user) => !user.slackUser);
+    if (nonExistingUsers.length > 0) {
+      console.log(
+        "Users not found in Slack, removing from Slack group:",
+        nonExistingUsers.map((user) => user.name)
+      );
+    }
+
+    const slackUserIds = all
+      .filter((user) => user.slackUser)
+      .map((user) => user.slackUser.id);
     await slack.setMembersInGroup(
       slackUserIds,
       config.SECURITY_CHAMPION_SLACK_USERGROUP
