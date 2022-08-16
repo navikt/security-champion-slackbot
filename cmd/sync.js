@@ -82,13 +82,17 @@ function formatSimpleUserList(userList) {
   );
 }
 
+function formatTeamkatalogUser(tkUser) {
+  return `${tkUser.navIdent} (${tkUser.resource?.email})`;
+}
+
 async function handleModifiedChampions(all) {
   try {
     const nonExistingUsers = all.filter((user) => !user.slackUser);
     if (nonExistingUsers.length > 0) {
       console.log(
         "Users not found in Slack, removing from Slack group:",
-        nonExistingUsers.map((user) => user.name)
+        nonExistingUsers.map(formatTeamkatalogUser)
       );
     }
 
