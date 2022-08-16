@@ -1,21 +1,21 @@
-const { Storage } = require("@google-cloud/storage");
-const config = require("../config");
-const { Readable } = require("stream");
-const { pipeline } = require("stream/promises");
-const fs = require("fs");
+import { Storage } from "@google-cloud/storage";
+import config from "../config";
+import { Readable } from "stream";
+import { pipeline } from "stream/promises";
+import fs from "fs";
 
 const bucketName = config.GSC_BUCKET_NAME;
 const storage = bucketName ? new Storage() : null;
 const bucket = storage ? storage.bucket(bucketName) : null;
 
-async function fileExists(fileName) {
+export async function fileExists(fileName: string) {
   if (!bucket) {
     return fs.existsSync(fileName);
   }
   return (await bucket.file(fileName).exists())[0];
 }
 
-async function getFileContent(fileName) {
+export async function getFileContent(fileName: string) {
   if (!bucket) {
     return fs.readFileSync(fileName, { encoding: "utf8" });
   }
@@ -23,7 +23,7 @@ async function getFileContent(fileName) {
   return (await bucket.file(fileName).download())[0];
 }
 
-async function setFileContents(fileName, contents) {
+export async function setFileContents(fileName: string, contents: string) {
   if (!bucket) {
     return fs.writeFileSync(fileName, contents, { encoding: "utf8" });
   }
@@ -51,9 +51,3 @@ async function setFileContents(fileName, contents) {
 
   return await pipeline(from, gcsStream);
 }
-
-module.exports = {
-  fileExists,
-  getFileContent,
-  setFileContents,
-};

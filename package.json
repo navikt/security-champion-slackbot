@@ -3,14 +3,15 @@
   "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "cli.js",
+  "main": "build/cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node cli.js",
+    "start": "node build/cli.js",
+    "build": "tsc",
     "prepare": "husky install",
     "refresh": "rm -rf node_modules && rm package-lock.json && npm i",
-    "test-storage": "node cli.js test-storage || exit 0",
-    "sync": "node cli.js sync || exit 0"
+    "test-storage": "node build/cli.js test-storage || exit 0",
+    "sync": "node build/cli.js sync || exit 0"
   },
   "author": "",
   "license": "ISC",
@@ -21,11 +22,13 @@
     "yargs": "17.5.1"
   },
   "devDependencies": {
+    "@types/node": "18.7.5",
     "husky": "8.0.1",
     "lint-staged": "13.0.2",
-    "prettier": "2.7.1"
+    "prettier": "2.7.1",
+    "typescript": "4.7.4"
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,ts,css,md}": "prettier --write"
   }
 }

@@ -1,6 +1,10 @@
-const fs = require("fs");
+export type Diff<T> = { added: T[]; removed: T[]; unchanged: T[] };
 
-function diffLists(oldList, newList, identityMapper = JSON.stringify) {
+export function diffLists<T>(
+  oldList: T[],
+  newList: T[],
+  identityMapper: (t: T) => string = JSON.stringify
+): Diff<T> {
   const oldIdentities = oldList.map(identityMapper);
   const newIdentities = newList.map(identityMapper);
 
@@ -20,11 +24,6 @@ function diffLists(oldList, newList, identityMapper = JSON.stringify) {
   return { added, removed, unchanged };
 }
 
-function removeDuplicates(list) {
+export function removeDuplicates<T>(list: T[]): T[] {
   return [...new Set(list)];
 }
-
-module.exports = {
-  diffLists,
-  removeDuplicates,
-};

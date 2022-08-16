@@ -1,5 +1,8 @@
-const { App } = require("@slack/bolt");
-const config = require("../config");
+import { App } from "@slack/bolt";
+import { ChatPostMessageArguments } from "@slack/web-api";
+import { Member } from "@slack/web-api/dist/response/UsersListResponse";
+
+import config from "../config";
 const util = require("./util");
 
 const app = new App({
@@ -7,12 +10,15 @@ const app = new App({
   token: config.SLACK_BOT_TOKEN,
 });
 
-async function getAllUsers() {
-  const allUsers = await queryAllUsers();
+export async function getAllUsers() {
+  const allUsers = await queryAllUsers(undefined);
   return allUsers;
 }
 
-async function queryAllUsers(cursor, level = 0) {
+async function queryAllUsers(
+  cursor: string | undefined,
+  level = 0
+): Promise<Member[]> {
   if (level > 20) {
     console.error(
       `Reached ${level} recursive user list queries. Something is probably wrong.`
@@ -20,9 +26,9 @@ async function queryAllUsers(cursor, level = 0) {
     return [];
   }
   const response = await app.client.users.list({ cursor });
-  const members = response.members;
+  const members = response.members ?? [];
 
-  const nextCursor = response.response_metadata.next_cursor;
+  const nextCursor = response.response_metadata?.next_cursor;
   if (!nextCursor) {
     return members;
   }
@@ -30,39 +36,36 @@ async function queryAllUsers(cursor, level = 0) {
   return members.concat(nextUsers);
 }
 
-async function getUsersById() {
+export async function getUsersById() {
   const users = await getAllUsers();
-  const usersById = {};
+  const usersById: { [key: string]: Member } = {};
   users
-    .filter((user) => user.profile.email)
+    .filter((user) => user.profile?.email)
     .forEach((user) => {
-      usersById[user.id] = user;
+      usersById[user.id!] = user;
     });
   return usersById;
 }
 
-async function getGroupUsers(groupId) {
+export async function getGroupUsers(groupId: string) {
   const data = await app.client.usergroups.users.list({ usergroup: groupId });
   if (!data.ok) throw data.error || "unknown error";
-  return data.users;
+  return data.users ?? [];
 }
 
-async function sendMessage(channel, options) {
+export async function sendMessage(options: ChatPostMessageArguments) {
   if (config.DRY_RUN) {
     console.log(
-      `[DRY_RUN] Sending to Slack channel ${channel}: ${JSON.stringify(
+      `[DRY_RUN] Sending to Slack channel ${options.channel}: ${JSON.stringify(
         options
       )}`
     );
     return;
   }
-  return await app.client.chat.postMessage({
-    channel,
-    ...options,
-  });
+  return await app.client.chat.postMessage(options);
 }
 
-async function addMembersToGroup(userIds, groupId) {
+export async function addMembersToGroup(userIds: string[], groupId: string) {
   const existingIds = await getGroupUsers(groupId);
   const updatedIds = util.removeDuplicates([...existingIds, ...userIds]);
   if (!config.DRY_RUN) {
@@ -73,7 +76,7 @@ async function addMembersToGroup(userIds, groupId) {
   }
 }
 
-async function setMembersInGroup(userIds, groupId) {
+export async function setMembersInGroup(userIds: string[], groupId: string) {
   if (!config.DRY_RUN) {
     return await app.client.usergroups.users.update({
       usergroup: groupId,
@@ -81,12 +84,3 @@ async function setMembersInGroup(userIds, groupId) {
     });
   }
 }
-
-module.exports = {
-  getAllUsers,
-  getUsersById,
-  getGroupUsers,
-  sendMessage,
-  addMembersToGroup,
-  setMembersInGroup,
-};

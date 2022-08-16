@@ -1,4 +1,4 @@
-const slack = require("../lib/slack");
+import * as slack from "../lib/slack";
 const fs = require("fs");
 
 module.exports = async function cmdGetSlackUsers() {

@@ -1,8 +1,8 @@
-function optional(key, defaultValue = undefined) {
+function optional(key: string, defaultValue: any = undefined) {
   return process.env[key] || defaultValue;
 }
 
-function required(key, defaultValue = undefined) {
+function required(key: string, defaultValue: any = undefined) {
   const value = optional(key, defaultValue);
   if (!value) {
     console.error(`Missing required env: ${key}`);
@@ -11,11 +11,11 @@ function required(key, defaultValue = undefined) {
   return value;
 }
 
-function asBool(value) {
+function asBool(value: any) {
   return value === true || value === "true";
 }
 
-module.exports = {
+export default {
   TEAMKATALOG_API_URL: required(
     "TEAMKATALOG_API_URL",
     "https://teamkatalog.nais.adeo.no/api"

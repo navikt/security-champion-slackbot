@@ -1,16 +1,18 @@
-const teamkatalog = require("../lib/teamkatalog");
-const slack = require("../lib/slack");
-const config = require("../config");
-const { diffLists } = require("../lib/util");
-const storage = require("../lib/storage");
+import config from "../config";
+import * as teamkatalog from "../lib/teamkatalog";
+import * as slack from "../lib/slack";
+import * as storage from "../lib/storage";
+import { diffLists, Diff } from "../lib/util";
+import { ResourceMember, ResourceMemberWithGroup } from "../lib/teamkatalog";
+import { Member } from "@slack/web-api/dist/response/UsersListResponse";
 
 const snapshotFile = "security-champions.json";
 
-async function getMemberDiff(currentSnapshot) {
+async function getMemberDiff(currentSnapshot: ResourceMemberWithGroup[]) {
   const previousSnapshot = (await storage.fileExists(snapshotFile))
     ? JSON.parse((await storage.getFileContent(snapshotFile)).toString("utf8"))
     : currentSnapshot;
-  const identityMapper = (item) => item.navIdent;
+  const identityMapper = (item: ResourceMemberWithGroup) => item.navIdent;
   const diff = diffLists(previousSnapshot, currentSnapshot, identityMapper);
 
   if (!config.DRY_RUN) {
@@ -20,13 +22,25 @@ async function getMemberDiff(currentSnapshot) {
   return diff;
 }
 
-function createLookupMap(list, lookupMapper) {
-  const mappedItems = {};
-  list.forEach((item) => (mappedItems[lookupMapper(item)] = item));
+function createLookupMap<T>(
+  list: T[],
+  lookupMapper: (item: T) => string | undefined
+) {
+  const mappedItems: { [key: string]: T } = {};
+  list.forEach((item) => {
+    const key = lookupMapper(item);
+    if (key) {
+      mappedItems[key] = item;
+    }
+  });
   return mappedItems;
 }
 
-async function lookupDiffUsersInSlack(diff) {
+type ResourceMemberWithGroupAndSlack = ResourceMemberWithGroup & {
+  slackUser: Member;
+};
+
+async function lookupDiffUsersInSlack(diff: Diff<ResourceMemberWithGroup>) {
   const allSlackUsers = await slack.getAllUsers();
   const slackUsers = allSlackUsers.filter((slackUser) => !slackUser.deleted);
   const slackByName = createLookupMap(slackUsers, (user) =>
@@ -36,21 +50,24 @@ async function lookupDiffUsersInSlack(diff) {
     user.profile?.email?.toLowerCase()
   );
 
-  const mapper = (teamkatalogUser) => {
+  const mapper = (
+    teamkatalogUser: ResourceMemberWithGroup
+  ): ResourceMemberWithGroupAndSlack => {
     const slackUser =
       slackByName[teamkatalogUser.navIdent.toLowerCase()] ??
       slackByEmail[teamkatalogUser.resource.email.toLowerCase()];
     return { ...teamkatalogUser, slackUser };
   };
 
-  return {
+  const mappedDiff: Diff<ResourceMemberWithGroupAndSlack> = {
     added: diff.added.map(mapper),
     removed: diff.removed.map(mapper),
     unchanged: diff.unchanged.map(mapper),
   };
+  return mappedDiff;
 }
 
-function simpleBlock(markdownMessage) {
+function simpleBlock(markdownMessage: string) {
   return {
     type: "section",
     text: {
@@ -60,7 +77,7 @@ function simpleBlock(markdownMessage) {
   };
 }
 
-function userSlackBlock(slackUser, markdownMessage) {
+function userSlackBlock(slackUser: Member, markdownMessage: string) {
   return {
     type: "section",
     text: {
@@ -69,24 +86,24 @@ function userSlackBlock(slackUser, markdownMessage) {
     },
     accessory: {
       type: "image",
-      image_url: slackUser.profile.image_192,
-      alt_text: slackUser.profile.real_name,
+      image_url: slackUser.profile?.image_192,
+      alt_text: slackUser.profile?.real_name,
     },
   };
 }
 
-function formatSimpleUserList(userList) {
+function formatSimpleUserList(userList: ResourceMemberWithGroupAndSlack[]) {
   return userList.map(
     (user) =>
       `- <@${user.slackUser.id}> (<${user.group.links.ui} | ${user.group.name}>)`
   );
 }
 
-function formatTeamkatalogUser(tkUser) {
+function formatTeamkatalogUser(tkUser: ResourceMember) {
   return `${tkUser.navIdent} (${tkUser.resource?.email})`;
 }
 
-async function handleModifiedChampions(all) {
+async function handleModifiedChampions(all: ResourceMemberWithGroupAndSlack[]) {
   try {
     const nonExistingUsers = all.filter((user) => !user.slackUser);
     if (nonExistingUsers.length > 0) {
@@ -98,7 +115,7 @@ async function handleModifiedChampions(all) {
 
     const slackUserIds = all
       .filter((user) => user.slackUser)
-      .map((user) => user.slackUser.id);
+      .map((user) => user.slackUser.id!);
     await slack.setMembersInGroup(
       slackUserIds,
       config.SECURITY_CHAMPION_SLACK_USERGROUP
@@ -108,7 +125,7 @@ async function handleModifiedChampions(all) {
   }
 }
 
-async function handleAddedChampions(added) {
+async function handleAddedChampions(added: ResourceMemberWithGroupAndSlack[]) {
   const simpleMessageParts = [
     "Nye Security Champions:",
     ...formatSimpleUserList(added),
@@ -116,7 +133,7 @@ async function handleAddedChampions(added) {
   const messageBlocks = added.map((user) =>
     userSlackBlock(
       user.slackUser,
-      `:tada: *<${user.group.links.ui} | ${user.group.name}>* har fått seg en ny Security Champion!\n:security-champion: ${user.slackUser.profile.real_name} (<@${user.slackUser.id}>)`
+      `:tada: *<${user.group.links.ui} | ${user.group.name}>* har fått seg en ny Security Champion!\n:security-champion: ${user.slackUser.profile?.real_name} (<@${user.slackUser.id}>)`
     )
   );
 
@@ -124,14 +141,17 @@ async function handleAddedChampions(added) {
     `Velkommen! :meow_wave: :security-pepperkake:\nSjekk <https://sikkerhet.nav.no/docs/ny-security-champion | «Ny Security Champion»> for praktiske oppgaver å starte med :muscle:`
   );
 
-  await slack.sendMessage(config.SECURITY_CHAMPION_CHANNEL, {
+  await slack.sendMessage({
+    channel: config.SECURITY_CHAMPION_CHANNEL,
     text: simpleMessageParts.join("\n"),
     blocks: [...messageBlocks, outroBlock],
     unfurl_links: false,
   });
 }
 
-async function handleRemovedChampions(removed) {
+async function handleRemovedChampions(
+  removed: ResourceMemberWithGroupAndSlack[]
+) {
   const simpleMessageParts = [
     "Fjernede Security Champions:",
     ...formatSimpleUserList(removed),
@@ -143,13 +163,16 @@ async function handleRemovedChampions(removed) {
     )
   );
 
-  await slack.sendMessage(config.SECURITY_CHAMPION_ADMIN_CHANNEL, {
+  await slack.sendMessage({
+    channel: config.SECURITY_CHAMPION_ADMIN_CHANNEL,
     text: simpleMessageParts.join("\n"),
     blocks: [...messageBlocks],
   });
 }
 
-async function handleDiff(diffWithSlack) {
+async function handleDiff(
+  diffWithSlack: Diff<ResourceMemberWithGroupAndSlack>
+) {
   const { added, removed, unchanged } = diffWithSlack;
   console.log(
     `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`
