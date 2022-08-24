@@ -78,6 +78,8 @@ function simpleBlock(markdownMessage: string) {
 }
 
 function userSlackBlock(slackUser: Member, markdownMessage: string) {
+  if (!slackUser) return simpleBlock(markdownMessage);
+
   return {
     type: "section",
     text: {
@@ -93,9 +95,10 @@ function userSlackBlock(slackUser: Member, markdownMessage: string) {
 }
 
 function formatSimpleUserList(userList: ResourceMemberWithGroupAndSlack[]) {
-  return userList.map(
-    (user) =>
-      `- <@${user.slackUser.id}> (<${user.group.links.ui} | ${user.group.name}>)`
+  return userList.map((user) =>
+    user.slackUser
+      ? `- <@${user.slackUser.id}> (<${user.group.links.ui} | ${user.group.name}>)`
+      : `- <${user.group.links.ui} | ${user.group.name})`
   );
 }
 
@@ -133,7 +136,11 @@ async function handleAddedChampions(added: ResourceMemberWithGroupAndSlack[]) {
   const messageBlocks = added.map((user) =>
     userSlackBlock(
       user.slackUser,
-      `:tada: *<${user.group.links.ui} | ${user.group.name}>* har fått seg en ny Security Champion!\n:security-champion: ${user.slackUser.profile?.real_name} (<@${user.slackUser.id}>)`
+      `:tada: *<${user.group.links.ui} | ${
+        user.group.name
+      }>* har fått seg en ny Security Champion!\n:security-champion: ${
+        user.resource.fullName
+      }${user.slackUser ? `(<@${user.slackUser.id}}>)` : ""}`
     )
   );
 
@@ -159,7 +166,11 @@ async function handleRemovedChampions(
   const messageBlocks = removed.map((user) =>
     userSlackBlock(
       user.slackUser,
-      `:sadpanda: Security Champion fjernet fra *<${user.group.links.ui} | ${user.group.name}>*\n<@${user.slackUser.id}>`
+      `:sadpanda: Security Champion fjernet fra *<${user.group.links.ui} | ${
+        user.group.name
+      }>*\n${
+        user.slackUser ? `<@${user.slackUser.id}>` : user.resource.fullName
+      }`
     )
   );
 
