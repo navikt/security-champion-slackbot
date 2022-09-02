@@ -140,7 +140,7 @@ async function handleAddedChampions(added: ResourceMemberWithGroupAndSlack[]) {
         user.group.name
       }>* har fått seg en ny Security Champion!\n:security-champion: ${
         user.resource.fullName
-      }${user.slackUser ? `(<@${user.slackUser.id}>)` : ""}`
+      }${user.slackUser ? ` (<@${user.slackUser.id}>)` : ""}`
     )
   );
 
