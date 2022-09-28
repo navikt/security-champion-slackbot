@@ -1,0 +1,19 @@
+apiVersion: nais.io/v1
+kind: Alert
+metadata:
+  name: security-champion-slackbot
+  namespace: security-champion-admin
+  labels:
+    team: security-champion-admin
+spec:
+  receivers:
+    slack:
+      channel: '#security-champion-admin'
+  alerts:
+    - alert: security-champions-slackbot has not run for 1 day in {{ clusterName }}
+      expr: 'time() - max(kube_job_status_completion_time{job_name=~"security-champion-slackbot.+"}) > (60*60*25)'
+      description: "Job is scheduled to run every day, and is responsible for updating the security champions slack group"
+      action: "Check if Job has run successfully:\n- `kubectl describe cronjob -n security-champion-admin security-champion-slackbot`\n- `kubectl describe pod -l app=`\n- `kubectl logs -l app=security-champion-slackbot --tail=1000`"
+      sla: respond within office hours
+      severity: warning
+      for: 1m
