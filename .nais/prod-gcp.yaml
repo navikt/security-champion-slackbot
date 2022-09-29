@@ -7,6 +7,7 @@ metadata:
   namespace: security-champion-admin
 spec:
   image: {{image}}
+  ttlSecondsAfterFinished: 340
   schedule: "37 11 * * *"
   gcp:
     buckets:
