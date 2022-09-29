@@ -8,7 +8,7 @@ metadata:
 spec:
   receivers:
     slack:
-      channel: '#security-champion-admin'
+      channel: '#julian-bot-test'
   alerts:
     - alert: security-champion-slackbot has not run for 1 day in {{ clusterName }}
       expr: 'time() - max(kube_job_status_completion_time{job_name=~"security-champion-slackbot.+"}) > (60*60*25)'
