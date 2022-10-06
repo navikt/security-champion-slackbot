@@ -8,7 +8,7 @@ metadata:
 spec:
   receivers:
     slack:
-      channel: '#julian-bot-test'
+      channel: '#security-champion-admin'
       send_resolved: false
   alerts:
     - alert: Naisjob failed
