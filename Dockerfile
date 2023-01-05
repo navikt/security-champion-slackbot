@@ -1,12 +1,10 @@
-FROM node:18-alpine AS runtime
-
-WORKDIR /usr/src/app
-
-COPY package*.json /usr/src/app/
+FROM node:18-slim as builder
+WORKDIR /app
+COPY . /app
 RUN npm ci
-COPY . /usr/src/app
 RUN npm run build
 
-USER node
-
-CMD ["npm", "run", "sync"]
+FROM gcr.io/distroless/nodejs18:nonroot
+WORKDIR /app
+COPY --from=builder /app /app
+CMD ["build/cli.js", "sync"]
