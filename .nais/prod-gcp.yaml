@@ -8,7 +8,7 @@ metadata:
 spec:
   image: {{image}}
   ttlSecondsAfterFinished: 300
-  schedule: "37 12 * * *"
+  schedule: "37 11 * * *"
   gcp:
     buckets:
       - name: security-champion-slackbot-prod
