@@ -16,6 +16,12 @@ spec:
           age: 7
           numNewerVersions: 2
           withState: ANY
+  accessPolicy:
+    outbound:
+      external:
+        - host: slack.com
+        - host: api.slack.com
+        - host: teamkatalog-api.prod-fss-pub.nais.io
   envFrom:
     - secret: security-champion-slackbot-config
   env:
