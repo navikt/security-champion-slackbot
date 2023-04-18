@@ -97,7 +97,7 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
-          RESOURCE: .nais/prod-gcp.yaml
+          RESOURCE: .nais/prod-gcp.yaml,.nais/alerts.yaml
 
   release:
     if: github.ref == 'refs/heads/main'
