@@ -1,19 +1,21 @@
-apiVersion: nais.io/v1
-kind: Alert
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
 metadata:
   name: security-champion-slackbot
   namespace: security-champion-admin
-  labels:
-    team: security-champion-admin
 spec:
-  receivers:
-    slack:
-      channel: '#security-champion-admin'
-      send_resolved: false
-  alerts:
-    - alert: Naisjob failed
-      description: Naisjob security-champion-slackbot failed
-      expr: kube_job_failed{job_name=~"^security-champion-slackbot.*", namespace="security-champion-admin"} > 0
-      for: 1m
-      action: "Sjekk loggene"
-      severity: warning
+  groups:
+    - name: security-champion-slackbot
+      rules:
+        - alert: Naisjob failed
+          expr: kube_job_failed{job_name=~"^security-champion-slackbot.*", namespace="security-champion-admin"} > 0
+          for: 1m
+          annotations:
+            description: Naisjob security-champion-slackbot failed
+            consequence: Security champions membership updates not notified
+            action: "check the logs"
+            summary: |-
+              Notifies if the latest run failed
+          labels:
+            namespace: security-champion-admin
+            severity: warning
