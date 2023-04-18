@@ -25,6 +25,8 @@ spec:
   envFrom:
     - secret: security-champion-slackbot-config
   env:
+    - name: TEAMKATALOG_API_URL
+      value: teamkatalog-api.dev-fss-pub.nais.io
     - name: GSC_BUCKET_NAME
       value: security-champion-slackbot-dev
     - name: NPM_CONFIG_CACHE
