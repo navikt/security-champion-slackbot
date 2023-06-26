@@ -166,7 +166,7 @@ async function handleRemovedChampions(
   const messageBlocks = removed.map((user) =>
     userSlackBlock(
       user.slackUser,
-      `:sadpanda: Security Champion fjernet fra *<${user.group.links.ui} | ${
+      `:sadpanda-t: Security Champion fjernet fra *<${user.group.links.ui} | ${
         user.group.name
       }>*\n${
         user.slackUser ? `<@${user.slackUser.id}>` : user.resource.fullName
