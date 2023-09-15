@@ -21,12 +21,15 @@ spec:
       external:
         - host: slack.com
         - host: api.slack.com
-        - host: teamkatalog-api.dev-fss-pub.nais.io
+      rules:
+      - application: team-catalog-backend
+        namespace: org
+        cluster: dev-gcp
   envFrom:
     - secret: security-champion-slackbot-config
   env:
     - name: TEAMKATALOG_API_URL
-      value: "https://teamkatalog-api.dev-fss-pub.nais.io"
+      value: "http://team-catalog-backend.org.svc.cluster.local"
     - name: GSC_BUCKET_NAME
       value: security-champion-slackbot-dev
     - name: NPM_CONFIG_CACHE
