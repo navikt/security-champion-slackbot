@@ -1,10 +1,10 @@
-FROM node:18-slim as builder
+FROM node:20-slim as builder
 WORKDIR /app
 COPY . /app
 RUN npm ci
 RUN npm run build
 
-FROM gcr.io/distroless/nodejs18:nonroot
+FROM gcr.io/distroless/nodejs20:nonroot
 WORKDIR /app
 COPY --from=builder /app /app
 CMD ["build/cli.js", "sync"]
