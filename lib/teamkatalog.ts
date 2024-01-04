@@ -11,6 +11,7 @@ async function getResource(resourceType: TeamkatalogResourceType) {
       headers: {
         cookie: `MRHSession=${config.TEAMKATALOG_MRH_SESSION}`,
         accept: "application/json",
+        "Nav-Consumer-Id": "security-champion-slackbot"
       },
     }
   );
