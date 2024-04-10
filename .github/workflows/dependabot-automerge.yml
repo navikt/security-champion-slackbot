@@ -27,20 +27,17 @@ jobs:
               return (today >= sommerStart && today <= sommerSlutt) || (today >= julStart && today <= julSlutt) || (today >= nyttaarStart && today <= nyttaarSlutt)
             } 
 
-            
-
             if (erFerie()) {
                 console.log('Skriptet kjører ikke i ferier');
                 return;
             }
-
 
             const pulls = await github.request('GET /repos/{owner}/{repo}/pulls', {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
             })
 
-            console.log(`Alle PRs funnet: ${pulls}`)
+            console.log(`Alle PRs funnet: ${JSON.stringify(pulls)}`)
 
             const toDager = 2 * 60 * 60 * 1000 // 2 days
             const filtrert = pulls.data
