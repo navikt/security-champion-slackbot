@@ -40,7 +40,7 @@ jobs:
                 repo: context.repo.repo,
             })
 
-            console.log(`Totalt antall PRs funnet: ${pulls.length}`)
+            console.log(`Alle PRs funnet: ${pulls}`)
 
             const toDager = 2 * 60 * 60 * 1000 // 2 days
             const filtrert = pulls.data
