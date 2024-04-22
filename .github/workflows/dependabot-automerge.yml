@@ -5,7 +5,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  checks: read
+  checks: write
   statuses: read
 
 jobs:
@@ -115,7 +115,6 @@ jobs:
 
             const mergeable = (await Promise.all(mergeablePromise))
                 .filter((it) => {
-                  console.log(`is it mergeable? ${it.mergeable}`)
                   return it.mergeable;
                 })
 
