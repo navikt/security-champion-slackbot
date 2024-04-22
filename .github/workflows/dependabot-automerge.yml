@@ -7,6 +7,7 @@ permissions:
   pull-requests: write
   checks: write
   statuses: read
+  actions: write
 
 jobs:
   merge-pullrequests:
@@ -104,7 +105,6 @@ jobs:
                         repo: context.repo.repo,
                         pull_number: it.number
                     })
-                    console.log(prdata)
                     return {
                         title: it.title,
                         number: it.number,
@@ -130,14 +130,14 @@ jobs:
                     pull_number: pr.number,
                     merge_method: 'squash'
                 })
+                
                 console.log('Starter main workflow')
-
                 await github.request(
                     'POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches',
                     {
                         owner: context.repo.owner,
                         repo: context.repo.repo,
-                        workflow_id: 'workflow.yml',
+                        workflow_id: 'main.yml',
                         ref: 'main',
                     }
                 )
