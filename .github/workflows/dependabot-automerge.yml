@@ -108,7 +108,7 @@ jobs:
                     return {
                         title: it.title,
                         number: it.number,
-                        mergeable: prdata.data.mergeable
+                        mergeable: it.mergeable
                     }
                 })
 
