@@ -105,6 +105,10 @@ jobs:
                         repo: context.repo.repo,
                         pull_number: it.number
                     })
+                    console.log("----------------------------")
+                    console.log(`${JSON.stringify(it)}`)
+                    console.log(`${JSON.stringify(prdata)}`)
+                    console.log("----------------------------")
                     return {
                         title: it.title,
                         number: it.number,
