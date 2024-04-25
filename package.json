@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/storage": "^7.9.0",
+    "@google-cloud/storage": "^7.10.0",
     "@slack/bolt": "^3.17.1",
     "cross-fetch": "^4.0.0",
     "yargs": "^17.7.2"
