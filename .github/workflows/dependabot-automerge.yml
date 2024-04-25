@@ -57,9 +57,6 @@ jobs:
                     }
                 })
 
-            console.log(`Filtrerte: ${filtrert.length}`)
-            filtrert.forEach((pr) => console.log(pr))
-
             const beriket = filtrert.map(async (it) => {
                     const QUERY = `query($owner: String!, $repo: String!, $pull_number: Int!) {
                                           repository(owner: $owner, name:$repo) {
@@ -94,9 +91,6 @@ jobs:
 
             const allePrs = await Promise.all(beriket)
 
-            console.log(`Berikede: ${allePrs.length}`)
-            allePrs.forEach((pr) => console.log(pr))
-
             const mergeablePromise = allePrs
                 .filter((it) => it.checksOk)
                 .map(async (it) => {
@@ -106,8 +100,8 @@ jobs:
                         pull_number: it.number
                     })
                     return {
-                        title: prdata.title,
-                        number: prdata.number,
+                        title: it.title,
+                        number: it.number,
                         mergeable: it.checksOk
                     }
                 })
