@@ -111,18 +111,16 @@ jobs:
                   return it.mergeable;
                 })
 
-            console.log(`Mergeable: ${mergeable.length}`)
-            mergeable.forEach((pr) => console.log(pr))
-
-            if (mergeable.length > 0) {
-                const pr = mergeable[0]
-                console.log('Merger PR', pr.title)
-                await github.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
+            console.log(`About to merge ${mergeable.length} PRs`)
+              
+            mergeable.forEach((pr) => {
+              console.log('Merging PR: ', pr.title)
+              await github.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     pull_number: pr.number,
                     merge_method: 'squash'
                 })
-            } else {
-                console.log('Ingen PRer å merge')
-            }
+            })
+
+          
