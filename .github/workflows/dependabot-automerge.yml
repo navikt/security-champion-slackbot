@@ -113,7 +113,7 @@ jobs:
 
             console.log(`About to merge ${mergeable.length} PRs`)
               
-            mergeable.forEach((pr) => {
+            mergeable.forEach(async (pr) => {
               console.log('Merging PR: ', pr.title)
               await github.request('PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge', {
                     owner: context.repo.owner,
