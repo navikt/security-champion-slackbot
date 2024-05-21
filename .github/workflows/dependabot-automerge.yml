@@ -21,15 +21,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            api.osv.dev:443 
-            api.securityscorecards.dev:443 
-            bestpractices.coreinfrastructure.org:443 
-            fulcio.sigstore.dev:443 
-            github.com:443 
             api.github.com:443 
-            rekor.sigstore.dev:443 
-            sigstore-tuf-root.storage.googleapis.com:443 
-            www.bestpractices.dev:443
       - name: merge
         uses: actions/github-script@v7
         with:
