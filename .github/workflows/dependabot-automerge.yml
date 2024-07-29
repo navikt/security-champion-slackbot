@@ -29,7 +29,7 @@ jobs:
             const erFerie = () => {
               const today = new Date();
               const sommerStart = new Date(today.getFullYear(), 5, 20);
-              const sommerSlutt = new Date(today.getFullYear(), 7, 7);
+              const sommerSlutt = new Date(today.getFullYear(), 6, 20);
               const julStart = new Date(today.getFullYear(), 11, 20);
               const julSlutt = new Date(today.getFullYear(), 11, 31);
               const nyttaarStart = new Date(today.getFullYear(), 0, 1);
