@@ -52,6 +52,8 @@ jobs:
   deploy-dev:
     needs: build-and-push
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # ratchet:actions/checkout@v4
       - uses: nais/deploy/actions/deploy@cb2604ae9b09eb936e06151ddbdcc62081bce06f # ratchet:nais/deploy/actions/deploy@v2
@@ -63,6 +65,8 @@ jobs:
   deploy-prod:
     needs: build-and-push
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # ratchet:actions/checkout@v4
       - uses: nais/deploy/actions/deploy@cb2604ae9b09eb936e06151ddbdcc62081bce06f # ratchet:nais/deploy/actions/deploy@v2
