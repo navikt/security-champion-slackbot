@@ -16,13 +16,14 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            api.osv.dev:443 
+            api.osv.dev:443
             api.securityscorecards.dev:443 
             bestpractices.coreinfrastructure.org:443 
-            fulcio.sigstore.dev:443 
-            github.com:443 
-            api.github.com:443 
-            rekor.sigstore.dev:443 
+            fulcio.sigstore.dev:443
+            github.com:443
+            api.github.com:443
+            objects.githubusercontent.com:443
+            rekor.sigstore.dev:443
             sigstore-tuf-root.storage.googleapis.com:443 
             www.bestpractices.dev:443
             registry.npmjs.org:443
@@ -31,6 +32,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          persist-credentials: false
       - name: Install dependencies
         run: npm ci
       - name: Test
