@@ -16,16 +16,9 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            api.osv.dev:443
-            api.securityscorecards.dev:443 
-            bestpractices.coreinfrastructure.org:443 
-            fulcio.sigstore.dev:443
             github.com:443
             api.github.com:443
             objects.githubusercontent.com:443
-            rekor.sigstore.dev:443
-            sigstore-tuf-root.storage.googleapis.com:443 
-            www.bestpractices.dev:443
             registry.npmjs.org:443
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # ratchet:actions/checkout@v4
       - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # ratchet:actions/setup-node@v4
@@ -37,8 +30,8 @@ jobs:
         run: npm ci
       - name: Test
         run: npm test
+
   build-and-push:
-    name: Build and push
     runs-on: ubuntu-latest
     needs: test
     permissions:
@@ -56,8 +49,8 @@ jobs:
           pull: true
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+
   deploy-dev:
-    name: Deploy til dev
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
@@ -67,8 +60,8 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: .nais/dev-gcp.yaml
           IMAGE: ${{ needs.build-and-push.outputs.image }}
+
   deploy-prod:
-    name: Deploy til prod
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
