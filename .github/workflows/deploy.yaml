@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     permissions:
-      contents: write
+      contents: read
       id-token: write
     outputs:
       image: ${{ steps.docker-push.outputs.image }}
