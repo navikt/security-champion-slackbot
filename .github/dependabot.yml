@@ -8,3 +8,17 @@ updates:
       all-deps:
          patterns:
             - "*"
+
+  - package-ecosystem: "github"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github:
+         patterns:
+            - "*"
+
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
