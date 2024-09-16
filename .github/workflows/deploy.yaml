@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # ratchet:step-security/harden-runner@v2
+        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # ratchet:step-security/harden-runner@v2
         with:
           disable-sudo: true
           egress-policy: block
@@ -40,7 +40,7 @@ jobs:
       image: ${{ steps.docker-push.outputs.image }}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # ratchet:actions/checkout@v4
-      - uses: nais/docker-build-push@0abf17674d94d1011c7acd2d91c1f0002f6108d2 # ratchet:nais/docker-build-push@v0
+      - uses: nais/docker-build-push@5246e4705d79945a0ec28eb9bd3638dd534fee46 # ratchet:nais/docker-build-push@v0
         id: docker-push
         with:
           team: security-champion-admin
@@ -56,7 +56,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # ratchet:actions/checkout@v4
-      - uses: nais/deploy/actions/deploy@8f0d76273e770757c441994a3e02c30c83d8cc3e # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@02542cfcca6488d3d6df28666d973308a3f3d538 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/dev-gcp.yaml
@@ -69,7 +69,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # ratchet:actions/checkout@v4
-      - uses: nais/deploy/actions/deploy@8f0d76273e770757c441994a3e02c30c83d8cc3e # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@02542cfcca6488d3d6df28666d973308a3f3d538 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/prod-gcp.yaml,.nais/alerts.yaml
