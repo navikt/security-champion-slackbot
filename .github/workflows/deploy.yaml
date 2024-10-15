@@ -20,7 +20,7 @@ jobs:
             api.github.com:443
             objects.githubusercontent.com:443
             registry.npmjs.org:443
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # ratchet:actions/checkout@v4
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # ratchet:actions/checkout@v4
       - uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # ratchet:actions/setup-node@v4
         with:
           node-version: 22
@@ -39,7 +39,7 @@ jobs:
     outputs:
       image: ${{ steps.docker-push.outputs.image }}
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # ratchet:actions/checkout@v4
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # ratchet:actions/checkout@v4
       - uses: nais/docker-build-push@5246e4705d79945a0ec28eb9bd3638dd534fee46 # ratchet:nais/docker-build-push@v0
         id: docker-push
         with:
@@ -55,8 +55,8 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # ratchet:actions/checkout@v4
-      - uses: nais/deploy/actions/deploy@f0cf5fedcaf21aa8f7c4da4e8b1b7b585eab51a5 # ratchet:nais/deploy/actions/deploy@v2
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # ratchet:actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@163cb43f841ab6a348b8a6ce18f309f5ad56363e # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/dev-gcp.yaml
@@ -68,8 +68,8 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # ratchet:actions/checkout@v4
-      - uses: nais/deploy/actions/deploy@f0cf5fedcaf21aa8f7c4da4e8b1b7b585eab51a5 # ratchet:nais/deploy/actions/deploy@v2
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # ratchet:actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@163cb43f841ab6a348b8a6ce18f309f5ad56363e # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/prod-gcp.yaml,.nais/alerts.yaml
