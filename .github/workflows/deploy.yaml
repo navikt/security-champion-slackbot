@@ -56,7 +56,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
-      - uses: nais/deploy/actions/deploy@afc49cf8aef70aef737f17f97cf07c65ebbe19cc # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@2325c1546a8592c0ca3d2fd43ed5128cca04bedb # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/dev-gcp.yaml
@@ -69,7 +69,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
-      - uses: nais/deploy/actions/deploy@afc49cf8aef70aef737f17f97cf07c65ebbe19cc # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@2325c1546a8592c0ca3d2fd43ed5128cca04bedb # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/prod-gcp.yaml,.nais/alerts.yaml
