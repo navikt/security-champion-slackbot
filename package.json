@@ -17,8 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/storage": "^7.14.0",
-    "@slack/bolt": "^4.1.1",
-    "cross-fetch": "^4.0.0",
+    "@slack/bolt": "^4.2.0",
+    "cross-fetch": "^4.1.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
