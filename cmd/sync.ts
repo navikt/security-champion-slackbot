@@ -4,7 +4,7 @@ import * as slack from "../lib/slack";
 import * as storage from "../lib/storage";
 import { diffLists, Diff } from "../lib/util";
 import { ResourceMember, ResourceMemberWithGroup } from "../lib/teamkatalog";
-import { Member } from "@slack/web-api/dist/response/UsersListResponse";
+import { Member } from "@slack/web-api/dist/types/response/UsersListResponse";
 
 const snapshotFile = "security-champions.json";
 
@@ -24,7 +24,7 @@ async function getMemberDiff(currentSnapshot: ResourceMemberWithGroup[]) {
 
 function createLookupMap<T>(
   list: T[],
-  lookupMapper: (item: T) => string | undefined
+  lookupMapper: (item: T) => string | undefined,
 ) {
   const mappedItems: { [key: string]: T } = {};
   list.forEach((item) => {
@@ -44,14 +44,14 @@ async function lookupDiffUsersInSlack(diff: Diff<ResourceMemberWithGroup>) {
   const allSlackUsers = await slack.getAllUsers();
   const slackUsers = allSlackUsers.filter((slackUser) => !slackUser.deleted);
   const slackByName = createLookupMap(slackUsers, (user) =>
-    user.name?.toLowerCase()
+    user.name?.toLowerCase(),
   );
   const slackByEmail = createLookupMap(slackUsers, (user) =>
-    user.profile?.email?.toLowerCase()
+    user.profile?.email?.toLowerCase(),
   );
 
   const mapper = (
-    teamkatalogUser: ResourceMemberWithGroup
+    teamkatalogUser: ResourceMemberWithGroup,
   ): ResourceMemberWithGroupAndSlack => {
     const slackUser =
       slackByName[teamkatalogUser.navIdent.toLowerCase()] ??
@@ -98,7 +98,7 @@ function formatSimpleUserList(userList: ResourceMemberWithGroupAndSlack[]) {
   return userList.map((user) =>
     user.slackUser
       ? `- <@${user.slackUser.id}> (<${user.group.links.ui} | ${user.group.name}>)`
-      : `- <${user.group.links.ui} | ${user.group.name})`
+      : `- <${user.group.links.ui} | ${user.group.name})`,
   );
 }
 
@@ -112,7 +112,7 @@ async function handleModifiedChampions(all: ResourceMemberWithGroupAndSlack[]) {
     if (nonExistingUsers.length > 0) {
       console.log(
         "Users not found in Slack, removing from Slack group:",
-        nonExistingUsers.map(formatTeamkatalogUser)
+        nonExistingUsers.map(formatTeamkatalogUser),
       );
     }
 
@@ -121,7 +121,7 @@ async function handleModifiedChampions(all: ResourceMemberWithGroupAndSlack[]) {
       .map((user) => user.slackUser.id!);
     await slack.setMembersInGroup(
       slackUserIds,
-      config.SECURITY_CHAMPION_SLACK_USERGROUP
+      config.SECURITY_CHAMPION_SLACK_USERGROUP,
     );
   } catch (e) {
     console.error("Error updating slack user group", e);
@@ -140,12 +140,12 @@ async function handleAddedChampions(added: ResourceMemberWithGroupAndSlack[]) {
         user.group.name
       }>* har fått seg en ny Security Champion!\n:security-champion: ${
         user.resource.fullName
-      }${user.slackUser ? ` (<@${user.slackUser.id}>)` : ""}`
-    )
+      }${user.slackUser ? ` (<@${user.slackUser.id}>)` : ""}`,
+    ),
   );
 
   const outroBlock = simpleBlock(
-    `Velkommen! :meow_wave: :security-pepperkake:\nSjekk <https://sikkerhet.nav.no/docs/ny-security-champion | «Ny Security Champion»> for praktiske oppgaver å starte med :muscle:`
+    `Velkommen! :meow_wave: :security-pepperkake:\nSjekk <https://sikkerhet.nav.no/docs/ny-security-champion | «Ny Security Champion»> for praktiske oppgaver å starte med :muscle:`,
   );
 
   await slack.sendMessage({
@@ -157,7 +157,7 @@ async function handleAddedChampions(added: ResourceMemberWithGroupAndSlack[]) {
 }
 
 async function handleRemovedChampions(
-  removed: ResourceMemberWithGroupAndSlack[]
+  removed: ResourceMemberWithGroupAndSlack[],
 ) {
   const simpleMessageParts = [
     "Fjernede Security Champions:",
@@ -170,8 +170,8 @@ async function handleRemovedChampions(
         user.group.name
       }>*\n${
         user.slackUser ? `<@${user.slackUser.id}>` : user.resource.fullName
-      }`
-    )
+      }`,
+    ),
   );
 
   await slack.sendMessage({
@@ -182,11 +182,11 @@ async function handleRemovedChampions(
 }
 
 async function handleDiff(
-  diffWithSlack: Diff<ResourceMemberWithGroupAndSlack>
+  diffWithSlack: Diff<ResourceMemberWithGroupAndSlack>,
 ) {
   const { added, removed, unchanged } = diffWithSlack;
   console.log(
-    `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`
+    `${added.length} added, ${removed.length} removed, ${unchanged.length} unchanged`,
   );
 
   await handleModifiedChampions([...unchanged, ...added]);

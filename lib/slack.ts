@@ -1,8 +1,8 @@
 import { App } from "@slack/bolt";
 import { ChatPostMessageArguments } from "@slack/web-api";
-import { Member } from "@slack/web-api/dist/response/UsersListResponse";
 
 import config from "../config";
+import { Member } from "@slack/web-api/dist/types/response/UsersListResponse";
 const util = require("./util");
 
 const app = new App({
@@ -17,11 +17,11 @@ export async function getAllUsers() {
 
 async function queryAllUsers(
   cursor: string | undefined,
-  level = 0
+  level = 0,
 ): Promise<Member[]> {
   if (level > 20) {
     console.error(
-      `Reached ${level} recursive user list queries. Something is probably wrong.`
+      `Reached ${level} recursive user list queries. Something is probably wrong.`,
     );
     return [];
   }
@@ -57,8 +57,8 @@ export async function sendMessage(options: ChatPostMessageArguments) {
   if (config.DRY_RUN) {
     console.log(
       `[DRY_RUN] Sending to Slack channel ${options.channel}: ${JSON.stringify(
-        options
-      )}`
+        options,
+      )}`,
     );
     return;
   }
