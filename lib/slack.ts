@@ -3,7 +3,7 @@ import { ChatPostMessageArguments } from "@slack/web-api";
 
 import config from "../config";
 import { Member } from "@slack/web-api/dist/types/response/UsersListResponse";
-const util = require("./util");
+import { removeDuplicates } from "./util";
 
 const app = new App({
   signingSecret: config.SLACK_SIGNING_SECRET,
@@ -67,7 +67,7 @@ export async function sendMessage(options: ChatPostMessageArguments) {
 
 export async function addMembersToGroup(userIds: string[], groupId: string) {
   const existingIds = await getGroupUsers(groupId);
-  const updatedIds = util.removeDuplicates([...existingIds, ...userIds]);
+  const updatedIds = removeDuplicates([...existingIds, ...userIds]);
   if (!config.DRY_RUN) {
     return await app.client.usergroups.users.update({
       usergroup: groupId,
