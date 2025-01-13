@@ -11,8 +11,7 @@ const app = new App({
 });
 
 export async function getAllUsers() {
-  const allUsers = await queryAllUsers(undefined);
-  return allUsers;
+  return await queryAllUsers(undefined);
 }
 
 async function queryAllUsers(
