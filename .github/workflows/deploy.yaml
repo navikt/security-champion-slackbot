@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: nais/docker-build-push@5246e4705d79945a0ec28eb9bd3638dd534fee46 # ratchet:nais/docker-build-push@v0
+      - uses: nais/docker-build-push@b456950f126babd98088910e4dc8ac9373823bda # ratchet:nais/docker-build-push@v0
         id: docker-push
         with:
           team: security-champion-admin
@@ -62,7 +62,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: nais/deploy/actions/deploy@8a33f80a2b36ccfb8e177023425afbd59764d33e # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@088fa3942efb022d496dc537f044f7a6a950649d # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/dev-gcp.yaml
@@ -77,7 +77,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: nais/deploy/actions/deploy@8a33f80a2b36ccfb8e177023425afbd59764d33e # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@088fa3942efb022d496dc537f044f7a6a950649d # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/prod-gcp.yaml,.nais/alerts.yaml
