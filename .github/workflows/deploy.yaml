@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # ratchet:step-security/harden-runner@v2
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # ratchet:step-security/harden-runner@v2
         with:
           disable-sudo: true
           egress-policy: block
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
         with:
           persist-credentials: false
-      - uses: nais/docker-build-push@b456950f126babd98088910e4dc8ac9373823bda # ratchet:nais/docker-build-push@v0
+      - uses: nais/docker-build-push@70c5289cc8ad6762198876d08f4e0d5426575c13 # ratchet:nais/docker-build-push@v0
         id: docker-push
         with:
           team: security-champion-admin
