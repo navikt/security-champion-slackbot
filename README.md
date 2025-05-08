@@ -13,7 +13,7 @@ For oppfølging av Security Champions.
 
 Slackboten er foreløpig satt opp til å kjøre som en `Naisjob` med et jevnt intervall.
 
-- Secrets og annen konfigurasjon hentes fra GCP Secret Manager
+- Secrets og annen konfigurasjon hentes fra Nais console
 - Listen av nåværende champions lagres i en GCP Storage Bucket for senere sammenligning
 - Korrelerer Teamkatalog-personer med Slack-brukere basert på enten `navIdent` eller `email`
 - Slack-integrasjonen er satt opp mot en custom app [«Security Champion Bot»](https://nav-it.slack.com/apps/A02SVEV917T-security-champion-bot)

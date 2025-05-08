@@ -37,7 +37,7 @@ function createLookupMap<T>(
 }
 
 type ResourceMemberWithGroupAndSlack = ResourceMemberWithGroup & {
-  slackUser: Member;
+  slackUser: Member | undefined;
 };
 
 async function lookupDiffUsersInSlack(diff: Diff<ResourceMemberWithGroup>) {
@@ -50,19 +50,73 @@ async function lookupDiffUsersInSlack(diff: Diff<ResourceMemberWithGroup>) {
     user.profile?.email?.toLowerCase(),
   );
 
+  // Filter out members who have left the company (have an endDate that's in the past)
+  const isActiveMember = (member: ResourceMemberWithGroup): boolean => {
+    const now = new Date();
+    const endDate = member.resource?.endDate
+      ? new Date(member.resource.endDate)
+      : null;
+    return !endDate || endDate > now;
+  };
+
+  // Apply the filter to all diff parts
+  const activeDiff = {
+    added: diff.added.filter(isActiveMember),
+    removed: diff.removed.filter(isActiveMember),
+    unchanged: diff.unchanged.filter(isActiveMember),
+  };
+
+  console.log(
+    `Filtered out ${diff.added.length - activeDiff.added.length} inactive members from added`,
+  );
+  console.log(
+    `Filtered out ${diff.removed.length - activeDiff.removed.length} inactive members from removed`,
+  );
+  console.log(
+    `Filtered out ${diff.unchanged.length - activeDiff.unchanged.length} inactive members from unchanged`,
+  );
+
+  // Validate that all active members have email addresses
+  const validateMembersWithEmail = (members: ResourceMemberWithGroup[]) => {
+    const membersWithoutEmail = members.filter(
+      (member) => !member.resource?.email,
+    );
+    if (membersWithoutEmail.length > 0) {
+      console.error("ERROR: Found members without email addresses:");
+      membersWithoutEmail.forEach((member) => {
+        console.error(
+          `  - ${member.navIdent}: ${member.resource?.fullName || "Unknown name"}`,
+        );
+      });
+      console.error(
+        "Email addresses are required for all members. Please fix the data and try again.",
+      );
+      process.exit(1);
+    }
+  };
+
+  // Validate all members in the filtered diff
+  validateMembersWithEmail(activeDiff.added);
+  validateMembersWithEmail(activeDiff.removed);
+  validateMembersWithEmail(activeDiff.unchanged);
+
   const mapper = (
     teamkatalogUser: ResourceMemberWithGroup,
   ): ResourceMemberWithGroupAndSlack => {
     const slackUser =
-      slackByName[teamkatalogUser.navIdent.toLowerCase()] ??
-      slackByEmail[teamkatalogUser.resource.email.toLowerCase()];
+      (teamkatalogUser.navIdent
+        ? slackByName[teamkatalogUser.navIdent.toLowerCase()]
+        : undefined) ??
+      (teamkatalogUser.resource?.email
+        ? slackByEmail[teamkatalogUser.resource.email.toLowerCase()]
+        : undefined);
     return { ...teamkatalogUser, slackUser };
   };
 
   const mappedDiff: Diff<ResourceMemberWithGroupAndSlack> = {
-    added: diff.added.map(mapper),
-    removed: diff.removed.map(mapper),
-    unchanged: diff.unchanged.map(mapper),
+    added: activeDiff.added.map(mapper),
+    removed: activeDiff.removed.map(mapper),
+    unchanged: activeDiff.unchanged.map(mapper),
   };
   return mappedDiff;
 }
@@ -77,7 +131,10 @@ function simpleBlock(markdownMessage: string) {
   };
 }
 
-function userSlackBlock(slackUser: Member, markdownMessage: string) {
+function userSlackBlock(
+  slackUser: Member | undefined,
+  markdownMessage: string,
+) {
   if (!slackUser) return simpleBlock(markdownMessage);
 
   return {
@@ -118,7 +175,8 @@ async function handleModifiedChampions(all: ResourceMemberWithGroupAndSlack[]) {
 
     const slackUserIds = all
       .filter((user) => user.slackUser)
-      .map((user) => user.slackUser.id!);
+      .map((user) => user.slackUser?.id)
+      .filter((id): id is string => id !== undefined);
     await slack.setMembersInGroup(
       slackUserIds,
       config.SECURITY_CHAMPION_SLACK_USERGROUP,

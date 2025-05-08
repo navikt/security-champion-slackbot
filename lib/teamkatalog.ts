@@ -11,9 +11,9 @@ async function getResource(resourceType: TeamkatalogResourceType) {
       headers: {
         cookie: `MRHSession=${config.TEAMKATALOG_MRH_SESSION}`,
         accept: "application/json",
-        "Nav-Consumer-Id": "security-champion-slackbot"
+        "Nav-Consumer-Id": "security-champion-slackbot",
       },
-    }
+    },
   );
   return await response.json();
 }
@@ -26,6 +26,7 @@ export type ResourceMember = {
     email: string;
     fullName: string;
     resourceType: "INTERNAL" | "EXTERNAL";
+    endDate?: string; // Added endDate as an optional string property
   };
 };
 
@@ -49,11 +50,11 @@ export type ResourceMemberWithGroup = ResourceMember & {
 };
 
 export async function getMembersWithRole(
-  role: TeamkatalogRole
+  role: TeamkatalogRole,
 ): Promise<ResourceMemberWithGroup[]> {
   const groups = await getAllMemberGroups();
   const allMembers = groups.flatMap((group) =>
-    group.members.map((member) => ({ ...member, group }))
+    group.members.map((member) => ({ ...member, group })),
   );
   return allMembers.filter((member) => member.roles.includes(role));
 }
