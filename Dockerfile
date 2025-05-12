@@ -1,4 +1,4 @@
-FROM node:23-slim AS builder
+FROM node:24-slim AS builder
 WORKDIR /app
 COPY . /app
 RUN npm ci
