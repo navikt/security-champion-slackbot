@@ -4,7 +4,7 @@ COPY . /app
 RUN npm ci
 RUN npm run build
 
-FROM gcr.io/distroless/nodejs22-debian12:latest@sha256:b765815eafacee5222bfa50179028f41dd8c642b68ad68ec4e6922d3b1ff2710
+FROM gcr.io/distroless/nodejs22-debian12:latest@sha256:8d54996fc549a9f6d8af41e0540ecf7ee75f31189e788a738cfcbf2f58903404
 WORKDIR /app
 COPY --from=builder /app /app
 CMD ["build/cli.js", "sync"]
