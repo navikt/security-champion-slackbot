@@ -9,7 +9,6 @@ permissions:
   pull-requests: write
   checks: write
   statuses: read
-
 jobs:
   merge-pullrequests:
     runs-on: ubuntu-latest
