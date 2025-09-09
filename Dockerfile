@@ -1,4 +1,4 @@
-FROM node:24-slim AS builder
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:22-dev AS builder
 WORKDIR /app
 COPY . /app
 RUN npm ci

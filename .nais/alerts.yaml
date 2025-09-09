@@ -2,13 +2,13 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: security-champion-slackbot
-  namespace: security-champion-admin
+  namespace: appsec
 spec:
   groups:
     - name: security-champion-slackbot
       rules:
         - alert: Naisjob failed
-          expr: kube_job_failed{job_name=~"^security-champion-slackbot.*", namespace="security-champion-admin"} > 0
+          expr: kube_job_failed{job_name=~"^security-champion-slackbot.*", namespace="appsec"} > 0
           for: 1m
           annotations:
             description: Naisjob security-champion-slackbot failed
@@ -17,5 +17,5 @@ spec:
             summary: |-
               Notifies if the latest run failed
           labels:
-            namespace: security-champion-admin
+            namespace: appsec
             severity: warning
