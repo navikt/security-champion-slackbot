@@ -20,7 +20,7 @@ jobs:
             api.github.com:443
             objects.githubusercontent.com:443
             registry.npmjs.org:443
-      - uses: actions/checkout@v6.0.0
+      - uses: actions/checkout@v6.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-node@v6
@@ -41,10 +41,10 @@ jobs:
     outputs:
       image: ${{ steps.docker-push.outputs.image }}
     steps:
-      - uses: actions/checkout@v6.0.0
+      - uses: actions/checkout@v6.0.1
         with:
           persist-credentials: false
-      - uses: nais/docker-build-push@1fae4798c79f4af4c3cdbd3fe65e51f8f3ba2368 # ratchet:nais/docker-build-push@v0
+      - uses: nais/docker-build-push@3b44f7c419b9511ad7c8b72174b3cc078d570bed # ratchet:nais/docker-build-push@v0
         id: docker-push
         with:
           team: appsec
@@ -57,10 +57,10 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v6.0.0
+      - uses: actions/checkout@v6.0.1
         with:
           persist-credentials: false
-      - uses: nais/deploy/actions/deploy@56e14061f2a8437bd9119e7b8f92749a3b288db1 # ratchet:nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@fa754451577294aae42872a69b888b3470478ec1 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/prod-gcp.yaml,.nais/alerts.yaml
