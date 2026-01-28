@@ -1,8 +1,8 @@
-name: Merge Dependabot PRs
+name: Automerge Dependabot PRs
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 8 * * *'
   workflow_dispatch:
 
 jobs:
@@ -10,9 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Required to merge PRs
+      pull-requests: read # Required for private/internal repos
+      statuses: read # Required for private/internal repos
     steps:
       - name: Automerge Dependabot PRs
-        uses: navikt/automerge-dependabot@v1
+        uses: navikt/automerge-dependabot@v1.3.1
         with:
           token: ${{ github.token }}
-          minimum-age-of-pr: '3'
