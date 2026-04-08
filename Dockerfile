@@ -1,8 +1,10 @@
 FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:24-dev AS builder
 WORKDIR /app
-COPY . /app
-RUN npm ci
-RUN npm run build
+RUN corepack enable && corepack prepare pnpm@10.18.1 --activate
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY . .
+RUN pnpm run build
 
 FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:24
 WORKDIR /app
