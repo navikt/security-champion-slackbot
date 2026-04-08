@@ -2,6 +2,7 @@
   "name": "security-champion-slackbot",
   "private": true,
   "version": "1.0.0",
+  "packageManager": "pnpm@10.18.1",
   "description": "",
   "main": "build/cli.js",
   "scripts": {
@@ -9,7 +10,7 @@
     "start": "node build/cli.js",
     "build": "tsc",
     "prepare": "husky install",
-    "refresh": "rm -rf node_modules && rm package-lock.json && npm i",
+    "refresh": "rm -rf node_modules && rm -f pnpm-lock.yaml package-lock.json && pnpm install",
     "test-storage": "node build/cli.js test-storage || exit 0",
     "sync": "node build/cli.js sync || exit 0"
   },
