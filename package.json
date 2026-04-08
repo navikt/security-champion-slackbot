@@ -9,7 +9,7 @@
     "test": "jest",
     "start": "node build/cli.js",
     "build": "tsc",
-    "prepare": "husky install",
+    "prepare": "husky",
     "refresh": "rm -rf node_modules && rm -f pnpm-lock.yaml package-lock.json && pnpm install",
     "test-storage": "node build/cli.js test-storage || exit 0",
     "sync": "node build/cli.js sync || exit 0"
