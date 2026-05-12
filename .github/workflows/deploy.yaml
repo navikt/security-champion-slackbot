@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: nais/docker-build-push@cd5ec5663feb0e05c3fa374d1fb442605b046c6b # ratchet:nais/docker-build-push@v0
+      - uses: nais/docker-build-push@be85229e81c0293c265c646c084f05317fb6e0d2 # ratchet:nais/docker-build-push@v0
         id: docker-push
         with:
           team: appsec
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: nais/deploy/actions/deploy@fa754451577294aae42872a69b888b3470478ec1 # v2
+      - uses: nais/deploy/actions/deploy@823ec9b7e305ce7cf911d0f9a25f7da9d7486cf2 # v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/prod-gcp.yaml,.nais/alerts.yaml
