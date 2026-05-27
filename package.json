@@ -2,7 +2,6 @@
   "name": "security-champion-slackbot",
   "private": true,
   "version": "1.0.0",
-  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319",
   "description": "",
   "main": "build/cli.js",
   "scripts": {
@@ -18,20 +17,21 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/storage": "^7.19.0",
-    "@slack/bolt": "^4.6.0",
-    "@slack/web-api": "^7.15.0",
+    "@slack/bolt": "^4.7.2",
+    "@slack/web-api": "^7.16.0",
     "cross-fetch": "^4.1.0",
+    "self-update": "^0.0.1",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.9.1",
     "husky": "^9.1.7",
-    "jest": "^30.3.0",
+    "jest": "^30.4.2",
     "lint-staged": "^16.4.0",
-    "prettier": "^3.8.1",
-    "ts-jest": "^29.4.6",
-    "typescript": "^6.0.2"
+    "prettier": "^3.8.3",
+    "ts-jest": "^29.4.11",
+    "typescript": "^6.0.3"
   },
   "lint-staged": {
     "*.{js,ts,css,md}": "prettier --write"
