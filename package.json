@@ -16,22 +16,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/storage": "^7.19.0",
-    "@slack/bolt": "^4.7.2",
-    "@slack/web-api": "^7.16.0",
+    "@google-cloud/storage": "^8.2.0",
+    "@slack/bolt": "^5.1.0",
+    "@slack/web-api": "^8.1.1",
     "cross-fetch": "^4.1.0",
     "self-update": "^0.0.1",
-    "yargs": "^18.0.0"
+    "yargs": "^18.2.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.9.1",
+    "@types/node": "^26.6.3",
     "husky": "^9.1.7",
-    "jest": "^30.4.2",
-    "lint-staged": "^16.4.0",
-    "prettier": "^3.8.3",
-    "ts-jest": "^29.4.11",
-    "typescript": "^6.0.3"
+    "jest": "^30.5.2",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
+    "ts-jest": "^29.4.14",
+    "typescript": "^7.0.2"
   },
   "lint-staged": {
     "*.{js,ts,css,md}": "prettier --write"
